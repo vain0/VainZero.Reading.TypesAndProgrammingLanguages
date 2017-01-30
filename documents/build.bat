@@ -1,0 +1,1 @@
+latexmk -pvc book.tex

@@ -1,0 +1,56 @@
+\documentclass[a4paper, 12pt, oneside, openany]{jsbook}
+%
+\usepackage
+  { amsmath
+  , amssymb
+  , amsthm
+  , bm
+  , makeidx
+  , verbatim
+  , wrapfig
+  , fancybox % 枠で囲むのに便利
+  }
+
+\makeindex
+
+\setlength{\textwidth}{\fullwidth}
+\setlength{\textheight}{40\baselineskip}
+\addtolength{\textheight}{\topskip}
+\setlength{\voffset}{-0.55in}
+
+\include{utility}
+
+\title{型システム入門(TaPL) 読書ノート}
+\author{vain0}
+\date{\today}
+\begin{document}
+
+\maketitle
+
+\frontmatter
+
+\addcontentsline{toc}{chapter}{概要}
+
+『型システム入門 プログラミング言語と型の理論』の読書ノート。証明の細部などの行間や、演習の回答などを記す。
+
+\tableofcontents
+
+\mainmatter
+
+\include{chapter-01}
+\include{chapter-02}
+
+% \appendix
+% \include{appendixA}
+
+\chapter*{謝辞}
+\addcontentsline{toc}{chapter}{謝辞}
+
+感謝
+
+% \include{biblography}
+
+\newpage
+\printindex
+
+\end{document}

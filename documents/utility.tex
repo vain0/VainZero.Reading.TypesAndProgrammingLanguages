@@ -1,0 +1,20 @@
+% \newcommand など。
+
+\theoremstyle{definition}
+\newtheorem{jtheorem}{定理}
+\newtheorem*{jtheorem*}{定理}
+\newtheorem{jdefinition}[jtheorem]{定義}
+\newtheorem*{jdefinition*}{定義}
+\newtheorem*{jexercise*}{演習}
+
+% \newcommand{\diff}{\mathrm{d}}
+
+% proof
+\makeatletter
+\newenvironment{jproof}[1][\proofHeader]{\par
+  \normalfont
+  \topsep6\p@\@plus6\p@ \trivlist
+  \item[\hskip\labelsep{\bfseries #1}\@addpunct{\bfseries.}]\ignorespaces
+}{\endtrivlist}
+\newcommand{\proofHeader}{証明}
+\makeatother
