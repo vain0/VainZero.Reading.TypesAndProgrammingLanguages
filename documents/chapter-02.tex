@@ -21,3 +21,31 @@
   すなわち、$R'$ は $R$ の反射的閉包といえる。
   \qed
 \end{jproof}
+
+\begin{jexercise*}[2.2.7]
+  略
+\end{jexercise*}
+\begin{jproof}
+  $R$ の推移的閉包 ($R$ を含む最小の推移的関係) を $S$ とおく。
+
+  まず $R^+ \subset S$ を示す。
+  任意の $n \in \bbN$ をとる。
+  数学的帰納法により、$R_n \subset S$ を示す。
+  $n = 0$ のとき、$R_0 = R \subset S$ である。
+  次に $n > 0$ とする。
+  任意の $(s, u) \in R_n$ をとる。
+  $R_n$ の定義より、$(s, t) \in R_{n - 1}$ かつ $(t, u) \in R_{n - 1}$ となる $t$ がある。
+  帰納法の仮定より、$R_{n - 1} \subset S$ である。
+  $S$ は推移的なので、$(s, u) \in S$ がいえる。
+
+  次に $S \subset R^+$ を示す。
+  $R^+$ が推移的関係であることを示せば十分である。
+  任意の $(s, t) \in R^+$ と $(t, u) \in R^+$ をとる。
+  $R^+$ の定義より、$(s, t) \in R_i$ となる $i$ があり、
+  同時に、$(t, u) \in R_j$ となる $j$ がある。
+  $k = \max(i, j)$ とおく。
+  $R_i \subset R_k$ かつ $R_j \subset R_k$ である。
+  よって $(s, t) \in R_k$ かつ $(t, u) \in R_k$ となるから、
+  $(s, u) \in R_{k + 1} \subset R^+$ 。
+  \qed
+\end{jproof}
