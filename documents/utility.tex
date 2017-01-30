@@ -1,10 +1,11 @@
 % \newcommand など。
 
 \theoremstyle{definition}
-\newtheorem{jtheorem}{定理}
+\newtheorem{jtheorem}{定理}[section]
 \newtheorem*{jtheorem*}{定理}
 \newtheorem{jdefinition}[jtheorem]{定義}
 \newtheorem*{jdefinition*}{定義}
+\newtheorem{jlemma}[jtheorem]{補題}
 \newtheorem*{jlemma*}{補題}
 \newtheorem*{jprop*}{命題}
 \newtheorem*{jexercise*}{演習}
@@ -31,4 +32,4 @@
 \newcommand\set[1]{\{#1\}}
 \newcommand\setc[2]{\{\,#1 \mid #2\,\}}
 \newcommand\card[1]{\operatorname{card}(#1)}
-\newcommand\ixran[2]{[#1, #2)}
+\newcommand\xrange[2]{[#1, #2)}
