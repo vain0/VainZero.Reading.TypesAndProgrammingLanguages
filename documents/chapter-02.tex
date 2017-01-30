@@ -1,1 +1,23 @@
 \chapter{数学的準備}
+
+\begin{jexercise*}[2.2.6]
+  略
+\end{jexercise*}
+\begin{jproof}
+  $R$ を含む任意の反射的関係 $S$ をとる。
+  任意の $(s, t) \in R'$ をとる。
+  和集合の定義から、
+    (a) $(s, t) \in R$ または
+    (b) $(s, t) \in \setc{(s, s)}{s \in S}$
+    である。
+  \begin{description}
+    \item[(a) のとき]
+      $R \subset S$ より $(s, t) \in S$ となる。
+    \item[(b) のとき]
+      $S$ は反射的であるから、 $(s, t) = (s, s) \in S$ となる。
+  \end{description}
+  よって $R' \subset S$ となる。
+  したがって、$R'$ は $R$ を含む最小の反射的関係である。
+  すなわち、$R'$ は $R$ の反射的閉包といえる。
+  \qed
+\end{jproof}
