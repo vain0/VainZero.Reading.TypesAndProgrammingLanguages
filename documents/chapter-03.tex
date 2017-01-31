@@ -14,5 +14,20 @@
     \\ |S_2| & = 3^3 + 3 \cdot 3 + 3 = 39,
     \\ |S_3| & = 39^3 + 3 \cdot 39 + 3 = 59439.
   \end{align*}
+\end{jproof}
+
+\begin{jexercise*}[3.2.5.]
+  略
+\end{jexercise*}
+\begin{jproof}
+  任意の $i \in \bbN$ をとる。
+  数学的帰納法により、$S_i \subset S_{i+1}$ を示す。
+  $i = 0$ のとき、$S_0 = \emptyset \subset S_1$ である。
+  $i > 0$ とする。
+  帰納法の仮定より、$S_{i-1} \subset S_i$ である。
+  任意の項 $t \in S_i$ をとる。
+  $t \in \set{\true, \false, 0}$ のとき、$t \in S_{i+1}$ は明らか。
+  $t \in \setc{\operatorname{succ} s}{s \in S_{i-1}}$ のとき、$s \in S_{i-1} \subset S_i$ であるから、$t \in \setc{\operatorname{succ} s}{s \in S_i} \subset S_{i+1}$ となる。
+  他のケースも同様。
   \qed
 \end{jproof}
