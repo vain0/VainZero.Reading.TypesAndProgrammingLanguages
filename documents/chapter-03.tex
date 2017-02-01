@@ -31,3 +31,82 @@
   他のケースも同様。
   \qed
 \end{jproof}
+
+\begin{jtheorem}[整礎帰納法]
+  $S$ 上の2項関係 $\leq$ を整礎 (無限降下列を持たない) とする。
+  $P$ を $S$ の元に関する述語とする。
+  $S$ の元 $s$ に関する述語 $Q(s)$ を「$t < s$ となる任意の $t$ について $P(t)$ が成り立つ」とおく。(これを帰納法の仮定という。)
+  さらに、$Q(s)$ を満たす任意の $s \in S$ について $P(s)$ が成り立つと仮定する。
+  このとき、任意の $s$ について $P(s)$ が成り立つ。
+\end{jtheorem}
+\begin{jproof}
+  $s \in S$ から始まる $\leq$ の降下列の最大の長さを $d(s)$ とおく。
+  $s$ から始まる降下列には長さ1の列 $(s)$ が存在するので、$d(s)$ の値は常に定義され、$d(s) \geq 1$ である。また、$\leq$ が整礎であることから、$d(s) < \infty$ である。
+
+  $n \in \bbN$ に関する述語 $R(n)$ を「$d(s) \leq n$ となる任意の $s \in S$ について、$P(s)$ が成り立つ」とおく。
+  任意の $n \in \bbN$ ($n \geq 1$) をとる。
+  数学的帰納法により $R(n)$ を示す。
+
+  まず $n = 1$ とする。
+  任意の $s \in S$ をとり、$d(s) \leq 1$ とする。
+  $Q(s)$ が成り立つことを示すため、$t < s$ となる任意の $t \in S$ をとる。
+  長さ2の降下列 $(s, t)$ が存在することから $d(s) \geq 2$ がいえて、矛盾する。
+  爆発律により、$P(t)$ が成り立つ。
+  こうして $Q(s)$ がいえた。
+  この $s$ について定理の仮定を用いて、$P(s)$ を得る。
+
+  次に $n > 1$ の場合を考える。
+  任意の $s \in S$ をとり、$d(s) \leq n$ とする。
+  $Q(s)$ を示すため、$t < s$ となる任意の $t \in S$ をとる。
+  仮に $d(t) \geq n$ とする。
+  $t$ から始まる最長の降下列 $(t_i)_{i=1}^{d(t)}$ が存在する。
+  このとき、$s > t$ より、列 $(s, t_1, \cdots, t_{d(t)})$ は $s$ から始まる長さ $d(t) + 1$ の降下列である。
+  よって $d(s) \geq d(t) + 1 \geq n + 1 > n$ となり、矛盾を得る。
+  したがって $d(t) < n$ である。
+  帰納法の仮定より、$R(d(t))$ が成り立つので、$P(t)$ がいえる。
+  こうして $Q(s)$ がいえた。
+  基底ケースと同様に $P(s)$ を得る。
+  数学的帰納法により、任意の $n \in \bbN$ ($n \geq 1$) について $R(n)$ が成り立つ。
+
+  最後に、任意の $s \in S$ をとる。
+  任意の $t \in S$ をとり、$t < s$ と仮定する。
+  $R(d(s))$ より、$P(s)$ が成り立つ。
+  よって $Q(s)$ がいえる。
+  定理の仮定より $P(s)$ が成り立つ。
+  \qed
+\end{jproof}
+
+\begin{jexercise*}[定理3.3.4.の証明]
+  深さに関する帰納法、サイズに関する帰納法、構造的帰納法を証明せよ。
+\end{jexercise*}
+\begin{jproof}
+  深さに関する帰納法について。
+  項の間の関係 $s \leq_d t$ を $\depth(s) \leq \depth(t)$ とおく。
+  $\depth$ の定義から、この関係が整礎であることはすぐ分かる。
+  整礎帰納法から結論を得る。
+
+  サイズに関する帰納法についても、深さに関する帰納法と同様に、$\operatorname{size}$ が項の構造に関して単調増加することを利用する。
+
+  構造的帰納法について。
+  「直接の部分項」という語が未定義なので、まずその定義を述べる。
+  項 $t$ の「直接の部分項」全体からなる集合 $\operatorname{Subterms}(t)$ を、次のように定義する。
+  \begin{align*}
+    \operatorname{Subterms}(\true) & = \emptyset,
+    \\ \operatorname{Subterms}(\false) & = \emptyset,
+    \\ \operatorname{Subterms}(0) & = \emptyset,
+    \\ \operatorname{Subterms}(\operatorname{succ}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{pred}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{iszero}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{if} t_1 \then t_2 \operatorname{else} t_3)
+      & = \set{t_1, t_2, t_3}.
+  \end{align*}
+  そして「項 $s$ が項 $t$ の直接の部分項である」を $s \in \operatorname{Subterms}(t)$ と定める。
+
+  この関係は整礎である。
+  なぜなら、項 $t$ から始まる任意の下降列 $(s_i)_{i=1}^n$ ($n$ は自然数または無限) について、列 $(\depth(s_i))_{i=1}^n$ が下降列であるため。
+  したがって、これも深さに関する帰納法と同様に、整礎帰納法に帰着できる。
+  \qed
+\end{jproof}
