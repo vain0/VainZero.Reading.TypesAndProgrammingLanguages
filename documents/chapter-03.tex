@@ -32,6 +32,8 @@
   \qed
 \end{jproof}
 
+\section{項に関する帰納法}
+
 \begin{jtheorem}[整礎帰納法]
   $S$ 上の2項関係 $\leq$ を整礎 (無限降下列を持たない) とする。
   $P$ を $S$ の元に関する述語とする。
@@ -110,3 +112,27 @@
   したがって、これも深さに関する帰納法と同様に、整礎帰納法に帰着できる。
   \qed
 \end{jproof}
+
+\section{意味論のスタイル}
+
+\section{評価}
+
+「規則が関係によって満たされる」とは「規則 (の任意のインスタンス) の、結論がその関係に属するか、または前提のうちの1つが属さない」こと。
+「前提のうちの1つが属さない」ような規則 (のインスタンス) は冗長なので、最小性によって取り除かれる？
+
+1ステップ評価関係に含まれる元の例としては
+  $(\operatorname{if} \true \then \true \operatorname{else} \false, \true)$
+や
+  $(\operatorname{if} (\operatorname{if} \true \then \true \operatorname{else} \false) \then \true \operatorname{else} \false, \true)$
+などがある。
+左辺の項に規則を繰り返し適用することで右辺を導出できればいい。
+
+\begin{jexercise*}[3.5.5]
+  略
+\end{jexercise*}
+\begin{jdefinition}[導出に関する帰納法]
+  $P$ を導出木に関する述語とする。
+  評価判断 $t \to t'$ を根とする任意の導出木 $T$ について、「$T$ より小さい、$t \to t'$ を根とする任意の導出木 $S$ について $P(S)$」ならば $P(T)$ であるとするとき、$t \to t'$ を根とする任意の導出木 $T$ について $P(T)$ が成り立つ。
+\end{jdefinition}
+
+「導出」の定義が述べられていないが、「導出の根」といった語があることから、導出木のことをいっているのだと予想する。
