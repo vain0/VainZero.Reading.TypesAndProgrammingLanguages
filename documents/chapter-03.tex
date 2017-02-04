@@ -169,3 +169,79 @@
 \begin{jremark*}
   これは演習3.5.10.の解答になる。
 \end{jremark*}
+
+\begin{jexercise*}[3.5.13]
+  略
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{description}
+    \item[(1)]
+      定理 3.5.4. (1ステップ評価の決定性) は成り立たなくなる。
+      例えば、項 $\operatorname{if} \true \then \true \operatorname{else} \false$ を1ステップ評価した結果が $\true$ にも $\false$ にもなりえるため。
+      同時に、定理 3.5.11. (正規形の一意性) も失われる。
+
+      他の3つ、定理 3.5.7. (すべての値が正規形であること)、
+      定理 3.5.8. (正規形がすべて値であること)、
+      定理 3.5.12. (評価の停止性) は保たれる。
+    \item[(2)]
+      定理 3.5.4. (1ステップ評価の決定性) は成り立たなくなる。
+      例えば、項
+      $
+        \operatorname{if}
+          (\operatorname{if} \true
+            \then \true
+            \operatorname{else} \false
+          )
+        \then
+          (\operatorname{if} \true
+            \then \true
+            \operatorname{else} \false
+          )
+        \operatorname{else} \false
+      $
+      を1ステップ評価した結果は2通りある。
+      ただし、規則の適用の仕方によらず正規形は一意であるため、定理 3.5.11. (正規形の一意性) は保たれる。
+      このことの証明は後述する。
+      他の3つは証明を含めて保たれる。
+  \end{description}
+\end{itembox}
+
+\begin{jtheorem}[正規形の一意性]
+  図 3-1 の体系に規則 (E-Funny2) を加えた体系において、正規形は一意である。
+\end{jtheorem}
+\begin{jproof}
+  任意の項 $t$ をとる。
+  深さに関する帰納法により証明する。
+  $t$ が正規形 ($\true$ または $\false$) である場合は明らか。
+  $t$ が正規形でない、すなわち項 $\IfThenElse{t_1}{t_2}{t_3}$ に等しいとする。
+  帰納法の仮定と評価の停止性より、
+    $t_1 \to^* u_1$、
+    $t_2 \to^* u_2$
+  となる正規形 $u_1$ と $u_2$ が一意に存在する。
+  $t_1 \not= u_1$, $t_2 \not= u_2$ の場合を考える。
+  このとき
+    $t_1 \to t'_1$ となる項 $t'_1$ と、
+    $t_2 \to t'_2$ となる項 $t'_2$
+  がある。
+  規則 (E-If) より $t \to \IfThenElse{t'_1}{t_2}{t_3}$ であるが、これに規則 (E-Funny2) を適用すると $\IfThenElse{t'_1}{t'_2}{t_3}$ に評価される。
+  この項は $t$ より真に小さいので、正規形 $u$ に一意に評価される。
+  まとめると、次のような評価列になる。
+  \begin{align*}
+    t
+    & \to \IfThenElse{t'_1}{t_2}{t_3}
+    \\ & \to \IfThenElse{t'_1}{t'_2}{t_3}
+    \\ & \to^* u
+  \end{align*}
+  一方、$t$ に規則 (E-Funny2) を適用すると、同様の議論により次の評価列を得る。
+  \begin{align*}
+    t
+    & \to \IfThenElse{t_1}{t'_2}{t_3}
+    \\ & \to \IfThenElse{t'_1}{t'_2}{t_3}
+    \\ & \to^* v
+  \end{align*}
+  ここで、項 $\IfThenElse{t'_1}{t'_2}{t_3}$ の正規形は $u$ であったから、$u = v$ が分かる。
+  したがって、$t$ の正規形は $u$ でなければならない。
+
+  他のケース ($t_1 = u_1$ など) も似たような議論により示せる。
+  \qed
+\end{jproof}
