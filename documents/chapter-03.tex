@@ -152,22 +152,25 @@
     \infrule[E-IfTrue]
     {
       t_1 \to^* \true
+      \andalso t_2 \to^* t'_2
     }
     {
-      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t_2
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t'_2
     }
 
     \infrule[E-IfFalse]
     {
       t_1 \to^* \false
+      \andalso t_3 \to^* t'_3
     }
     {
-      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t_3
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t'_3
     }
   \end{screen}
 \end{jdefinition}
 \begin{jremark*}
   これは演習3.5.10.の解答になる。
+  後述される大ステップ評価 $\Downarrow$ とは異なり、「中間の状態」に遷移できる。
 \end{jremark*}
 
 \begin{jexercise*}[3.5.13]
