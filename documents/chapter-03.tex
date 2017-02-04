@@ -136,3 +136,36 @@
 \end{jdefinition}
 
 「導出」の定義が述べられていないが、「導出の根」といった語があることから、導出木のことをいっているのだと予想する。
+
+\begin{jtheorem*}[3.5.7]
+  すべての値は正規形である。すなわち、値を評価して別の項にすることはできない。
+\end{jtheorem*}
+
+この定理はすべての言語について成り立つ{\bf べき}。
+
+\begin{jdefinition}[多ステップ評価関係 $\to^*$ の定義]
+  多ステップ評価関係 $\to^*$ とは、次の3つの推論規則を満たす、項に関する最小の2項関係である。
+
+  \begin{screen}
+    \infax[E-Epsilon]{t \to^* t}
+
+    \infrule[E-IfTrue]
+    {
+      t_1 \to^* \true
+    }
+    {
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t_2
+    }
+
+    \infrule[E-IfFalse]
+    {
+      t_1 \to^* \false
+    }
+    {
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t_3
+    }
+  \end{screen}
+\end{jdefinition}
+\begin{jremark*}
+  これは演習3.5.10.の解答になる。
+\end{jremark*}
