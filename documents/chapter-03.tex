@@ -248,3 +248,34 @@
   他のケース ($t_1 = u_1$ など) も似たような議論により示せる。
   \qed
 \end{jproof}
+
+算術演算を加えた体系を NB と呼ぶ。
+
+\begin{jexercise*}[3.5.14.]
+  NB の評価の決定性を示せ。
+\end{jexercise*}
+\begin{jproof}
+  $t \to t'$ かつ $t \to t''$ とする。
+  導出に関する帰納法により示す。
+  $t \to t'$ の導出の最後の規則について検討する。
+  \begin{description}
+    \item[(E-IfTrue) の場合]
+      $t = \IfThenElse{\true}{t_2}{t_3}$ であり、$t \to t''$ の導出の最後の規則も (E-IfTrue) でなければならないため。
+    \item[(E-IfFalse) の場合]
+      (E-IfTrue) の場合と同様。
+    \item[(E-If) の場合]
+      $t = \IfThenElse{t_1}{t_2}{t_3}$ であり、$t_1 \to t'_1$ となる $t'_1$ がある。
+      $t_1$ は正規形ではないので、$\true$ でも $\false$ でもない。
+      ゆえに、$t \to t''$ の導出の最後の規則は (E-If) でなければならず、$t_1 \to t''_1$ となる $t''_1$ がある。
+      帰納法の仮定より $t'_1 = t''_1$ であり、結果として $t' = t''$ がいえる。
+    \item[(E-Succ) の場合]
+      $t = \operatorname{succ}(t_1)$ とおけて、$t_1 \to t'_1$ となる項 $t'_1$ がある。
+      $t$ の構造から、$t \to t''$ の導出の最後の規則も (E-Succ) でしかありえない。
+      ゆえに $t_1 \to t''1$ となる項 $t''_1$ がある。
+      帰納法の仮定より、$t'_1 = t''_1$ であり、$t' = t''$ がいえる。
+    \item[(E-Pred), (E-IsZero) の場合]
+      (E-Succ) の場合と同様。
+    \item[(E-PredZero), (E-PredSucc), (E-IsZeroZero) の場合]
+      (E-IfTrue) の場合と同様。
+  \end{description}
+\end{jproof}
