@@ -1,1 +1,15 @@
 \chapter{型無しラムダ計算}
+
+\begin{jexercise*}[5.2.1]
+  or, not を表すラムダ抽象を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{itemize}
+    \item
+      $\operatorname{or}(l, r) = \IfThenElse{l}{\true}{r}$ であるから、
+      $\operatorname{or} = \lambda l. \lambda r. l \true r$
+      と定義すればよい。
+    \item
+      $\operatorname{not} = \lambda x. x \false \true$
+  \end{itemize}
+\end{itembox}
