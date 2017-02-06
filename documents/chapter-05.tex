@@ -1,5 +1,19 @@
 \chapter{型無しラムダ計算}
 
+\section{基礎}
+
+\section{ラムダ計算でのプログラミング}
+
+\begin{jdefinition}
+  \begin{align*}
+    \true & = \lambda x y. x
+    \\ \false & = \lambda x y. y
+  \end{align*}
+\end{jdefinition}
+
+真偽値がif式の機能を持つのが興味深い。
+唐突に意識を高めると、「ラムダ項による定義はその値の本質的な操作を表している」といえそうだ。
+
 \begin{jexercise*}[5.2.1]
   or, not を表すラムダ抽象を定義せよ。
 \end{jexercise*}
@@ -7,9 +21,38 @@
   \begin{itemize}
     \item
       $\operatorname{or}(l, r) = \IfThenElse{l}{\true}{r}$ であるから、
-      $\operatorname{or} = \lambda l. \lambda r. l \true r$
+      $\operatorname{or} = \lambda l r. l \true r$
       と定義すればよい。
     \item
       $\operatorname{not} = \lambda x. x \false \true$
   \end{itemize}
+\end{itembox}
+
+\begin{align*}
+  \operatorname{pair} & = \lambda x y p. p x y
+  \\ \operatorname{fst} & = \lambda t. t \true
+  \\ \operatorname{snd} & = \lambda t. t \false
+\end{align*}
+
+ペアの構築子は「要素と射影を受け取る関数」として定められる。
+射影関数はそのまま、要素の列から1つの値を選択する関数である。
+$\true$、$\false$ はペアの射影関数にもなっている。(偶然？)
+
+\begin{align*}
+  c_0 & = \lambda f x. x
+  \\ c_1 & = \lambda f x. f x
+  \\ c_2 & = \lambda f x. f (f x)
+  \\ c_{i+1} & = \lambda f x. f (c_i f x)
+  \\ \operatorname{succ} & = \lambda n f x. f (n f x)
+\end{align*}
+
+Church自然数は関数の冪乗として定義される。
+
+\begin{jexercise*}[5.2.2]
+  Chuch数の後者関数 $\operatorname{succ}$ を別の方法で定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{align*}
+    \operatorname{succ} = \lambda n f x. n f (f x)
+  \end{align*}
 \end{itembox}
