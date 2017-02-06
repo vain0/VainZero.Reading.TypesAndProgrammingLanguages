@@ -303,3 +303,76 @@
   いずれにせよ、$u$ は体系 ${\bf NB}$ の行き詰まり状態であることが分かる。
   \qed
 \end{itembox}
+
+\begin{jexercise*}[3.5.17]
+  体系 ${\bf NB}$ の小ステップ意味論と大ステップ意味論が一致することを示せ。
+\end{jexercise*}
+\begin{jproof}
+  任意の項 $t$ をとる。
+  ある値 $v$ で、$t \to^* v$ となるものがあるとする。
+  項 $t$ の構造に関する帰納法により、$t \Downarrow v$ を示そう。
+  \begin{description}
+    \item[$t = \IfThenElse{t_1}{t_2}{t_3}$ の場合]
+      $t_1 \to^* \true$ または $t_1 \to^* \false$ である。
+      (
+        仮にもしどちらでもないとすると、$t_1$ の正規形は行き詰まり状態である。
+        そのとき $t$ の正規形 $v$ も行き詰まり状態ということになり、$v$ が値であることと矛盾する。
+      )
+      まず $t_1 \to^* true$ と仮定する。
+      $t$ の直接の部分項 $t_1$ について帰納法の仮定を用いることにより、$t_1 \Downarrow \true$ がいえる。
+      さらに、$t \to^* \IfThenElse{\true}{t_2}{t_3} \to t_2 \to^* v$ となるから、帰納法の仮定より $t_2 \Downarrow v$ がいえる。
+      したがって、規則 (B-IfTrue) より $t \Downarrow v$ がいえた。
+      $t_1 \to^* \false$ の場合も同様。
+    \item[$t = \operatorname{succ}(t_1)$ の場合]
+      ある自然数項 $v_1$ で、$t_1 \to^* v_1$ となるものがある。
+      (仮にそうでなければ、$t_1$ の正規形は行き詰まり状態であり、$t$ の正規形 $v$ も行き詰まり状態であることになってしまうため。)
+      帰納法の仮定より $t_1 \Downarrow v_1$ であるから、規則 (B-Succ) より $t \Downarrow \operatorname{succ}(v_1)$ が成り立つ。
+      $t_1 \to^* v_1$ より、規則 (E-Succ) を繰り返し適用することにより、$v = \operatorname{succ}(v_1)$ を得る。
+      したがって $t \Downarrow v$ が分かった。
+    \item[$t = \operatorname{pred}(t_1)$ の場合]
+      $t_1 \to^* 0$ であるか、ある自然数項 $v_1$ で $t_1 \to^* \operatorname{succ}(v_1)$ となるものがあるかの、どちらかである。
+      (仮にどちらでもないとすると $v$ が値であることと矛盾する。)
+      $t_1 \to^* 0$ の場合、$v = 0$ が分かる。帰納法の仮定より $t_1 \Downarrow 0$ であるから、規則 (B-PredZero) により $t \Downarrow 0$ が分かる。
+      $t_1 \to^* \operatorname{succ}(v_1)$ の場合、帰納法の仮定より $t_1 \Downarrow \operatorname{succ}(v_1)$ であるから、規則 (B-PredSucc) により、$t \Downarrow v$ が分かる。
+    \item[$t = \operatorname{iszero}(t_1)$ の場合]
+      同様。
+  \end{description}
+
+  次に、ある値 $v$ で $t \Downarrow v$ となるものがあるとする。
+  $t \Downarrow v$ の導出に関する帰納法により、$t \to^* v$ を示そう。
+  導出の最後の規則について場合分けして考える。
+  \begin{description}
+    \item[(B-Value) の場合]
+      $t = v$ であるから、$t \to^* v$ がただちに分かる。
+    \item[(B-IfTrue) の場合]
+      $t = \IfThenElse{t_1}{t_2}{t_3}$ とおける。
+      それぞれ $t_1 \Downarrow \true$ と $t_2 \Downarrow v$ を根とする部分導出がある。
+      帰納法の仮定より、$t_1 \to^* \true$ と $t_2 \to^* v$ がいえる。
+      規則 (E-If) を繰り返し用いることにより、
+      \begin{align*}
+        t
+        & = \IfThenElse{t_1}{t_2}{t_3}
+        \\ & \to^* \IfThenElse{\true}{t_2}{t_3}
+        \\ & \to t_2
+        \\ & \to^* v
+      \end{align*}
+      となり、すなわち $t \to^* v$ がいえる。
+    \item[(B-IfFalse) の場合]
+      (B-IfTrue) の場合と同様。
+    \item[(B-Succ) の場合]
+      $t = \operatorname{succ}(t_1)$、$v = \operatorname{succ}(v_1)$ とおける。
+      $t_1 \Downarrow v_1$ を根とする部分導出がある。
+      帰納法の仮定より、$t_1 \to^* v_1$ である。
+      よって $\operatorname{succ}(t_1) \to^* \operatorname{succ}(v_1)$ 、
+      すなわち $t \to^* v$ を得る。
+    \item[(B-Pred), (B-IsZero) の場合]
+      (B-Succ) の場合と同様。
+    \item[(B-PredZero) の場合]
+      $t = \operatorname{pred}(t_1)$、$v = 0$ とおける。
+      $t_1 \Downarrow 0$ であり、帰納法の仮定より $t_1 \to^* 0$ となる。
+      ゆえに $t \to^* v$ を得る。
+    \item[(B-IsZeroZero), (B-IsZeroSucc) の場合]
+      (B-PredZero) の場合と同様。
+  \end{description}
+  \qed
+\end{jproof}
