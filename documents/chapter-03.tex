@@ -1,0 +1,409 @@
+\part{型無しの計算体系}
+\chapter{型無し算術式}
+\section{導入}
+
+\section{構文}
+
+\begin{jexercise*}[3.2.4]
+  略
+\end{jexercise*}
+\begin{jproof}
+  任意の $i \in \bbN$ について、$m = |S_i|$ とおくと、定義から $|S_{i+1}| = m^3 + 3m + 3$ となる。
+  \begin{align*}
+    |S_1| & = 3,
+    \\ |S_2| & = 3^3 + 3 \cdot 3 + 3 = 39,
+    \\ |S_3| & = 39^3 + 3 \cdot 39 + 3 = 59439.
+  \end{align*}
+\end{jproof}
+
+\begin{jexercise*}[3.2.5.]
+  略
+\end{jexercise*}
+\begin{jproof}
+  任意の $i \in \bbN$ をとる。
+  数学的帰納法により、$S_i \subset S_{i+1}$ を示す。
+  $i = 0$ のとき、$S_0 = \emptyset \subset S_1$ である。
+  $i > 0$ とする。
+  帰納法の仮定より、$S_{i-1} \subset S_i$ である。
+  任意の項 $t \in S_i$ をとる。
+  $t \in \set{\true, \false, 0}$ のとき、$t \in S_{i+1}$ は明らか。
+  $t \in \setc{\operatorname{succ} s}{s \in S_{i-1}}$ のとき、$s \in S_{i-1} \subset S_i$ であるから、$t \in \setc{\operatorname{succ} s}{s \in S_i} \subset S_{i+1}$ となる。
+  他のケースも同様。
+  \qed
+\end{jproof}
+
+\section{項に関する帰納法}
+
+\begin{jtheorem}[整礎帰納法]
+  $S$ 上の2項関係 $\leq$ を整礎 (無限降下列を持たない) とする。
+  $P$ を $S$ の元に関する述語とする。
+  $S$ の元 $s$ に関する述語 $Q(s)$ を「$t < s$ となる任意の $t$ について $P(t)$ が成り立つ」とおく。(これを帰納法の仮定という。)
+  さらに、$Q(s)$ を満たす任意の $s \in S$ について $P(s)$ が成り立つと仮定する。
+  このとき、任意の $s$ について $P(s)$ が成り立つ。
+\end{jtheorem}
+\begin{jproof}
+  $s \in S$ から始まる $\leq$ の降下列の最大の長さを $d(s)$ とおく。
+  $s$ から始まる降下列には長さ1の列 $(s)$ が存在するので、$d(s)$ の値は常に定義され、$d(s) \geq 1$ である。また、$\leq$ が整礎であることから、$d(s) < \infty$ である。
+
+  $n \in \bbN$ に関する述語 $R(n)$ を「$d(s) \leq n$ となる任意の $s \in S$ について、$P(s)$ が成り立つ」とおく。
+  任意の $n \in \bbN$ ($n \geq 1$) をとる。
+  数学的帰納法により $R(n)$ を示す。
+
+  まず $n = 1$ とする。
+  任意の $s \in S$ をとり、$d(s) \leq 1$ とする。
+  $Q(s)$ が成り立つことを示すため、$t < s$ となる任意の $t \in S$ をとる。
+  長さ2の降下列 $(s, t)$ が存在することから $d(s) \geq 2$ がいえて、矛盾する。
+  爆発律により、$P(t)$ が成り立つ。
+  こうして $Q(s)$ がいえた。
+  この $s$ について定理の仮定を用いて、$P(s)$ を得る。
+
+  次に $n > 1$ の場合を考える。
+  任意の $s \in S$ をとり、$d(s) \leq n$ とする。
+  $Q(s)$ を示すため、$t < s$ となる任意の $t \in S$ をとる。
+  仮に $d(t) \geq n$ とする。
+  $t$ から始まる最長の降下列 $(t_i)_{i=1}^{d(t)}$ が存在する。
+  このとき、$s > t$ より、列 $(s, t_1, \cdots, t_{d(t)})$ は $s$ から始まる長さ $d(t) + 1$ の降下列である。
+  よって $d(s) \geq d(t) + 1 \geq n + 1 > n$ となり、矛盾を得る。
+  したがって $d(t) < n$ である。
+  帰納法の仮定より、$R(d(t))$ が成り立つので、$P(t)$ がいえる。
+  こうして $Q(s)$ がいえた。
+  基底ケースと同様に $P(s)$ を得る。
+  数学的帰納法により、任意の $n \in \bbN$ ($n \geq 1$) について $R(n)$ が成り立つ。
+
+  最後に、任意の $s \in S$ をとる。
+  任意の $t \in S$ をとり、$t < s$ と仮定する。
+  $R(d(s))$ より、$P(s)$ が成り立つ。
+  よって $Q(s)$ がいえる。
+  定理の仮定より $P(s)$ が成り立つ。
+  \qed
+\end{jproof}
+
+\begin{jexercise*}[定理3.3.4.の証明]
+  深さに関する帰納法、サイズに関する帰納法、構造的帰納法を証明せよ。
+\end{jexercise*}
+\begin{jproof}
+  深さに関する帰納法について。
+  項の間の関係 $s \leq_d t$ を $\depth(s) \leq \depth(t)$ とおく。
+  $\depth$ の定義から、この関係が整礎であることはすぐ分かる。
+  整礎帰納法から結論を得る。
+
+  サイズに関する帰納法についても、深さに関する帰納法と同様に、$\operatorname{size}$ が項の構造に関して単調増加することを利用する。
+
+  構造的帰納法について。
+  「直接の部分項」という語が未定義なので、まずその定義を述べる。
+  項 $t$ の「直接の部分項」全体からなる集合 $\operatorname{Subterms}(t)$ を、次のように定義する。
+  \begin{align*}
+    \operatorname{Subterms}(\true) & = \emptyset,
+    \\ \operatorname{Subterms}(\false) & = \emptyset,
+    \\ \operatorname{Subterms}(0) & = \emptyset,
+    \\ \operatorname{Subterms}(\operatorname{succ}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{pred}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{iszero}(t_1))
+      & = \set{t_1},
+    \\ \operatorname{Subterms}(\operatorname{if} t_1 \then t_2 \operatorname{else} t_3)
+      & = \set{t_1, t_2, t_3}.
+  \end{align*}
+  そして「項 $s$ が項 $t$ の直接の部分項である」を $s \in \operatorname{Subterms}(t)$ と定める。
+
+  この関係は整礎である。
+  なぜなら、項 $t$ から始まる任意の下降列 $(s_i)_{i=1}^n$ ($n$ は自然数または無限) について、列 $(\depth(s_i))_{i=1}^n$ が下降列であるため。
+  したがって、これも深さに関する帰納法と同様に、整礎帰納法に帰着できる。
+  \qed
+\end{jproof}
+
+\section{意味論のスタイル}
+
+\section{評価}
+
+「規則が関係によって満たされる」とは「規則 (の任意のインスタンス) の、結論がその関係に属するか、または前提のうちの1つが属さない」こと。
+「前提のうちの1つが属さない」ような規則 (のインスタンス) は冗長なので、最小性によって取り除かれる？
+
+1ステップ評価関係に含まれる元の例としては
+  $(\operatorname{if} \true \then \true \operatorname{else} \false, \true)$
+や
+  $(\operatorname{if} (\operatorname{if} \true \then \true \operatorname{else} \false) \then \true \operatorname{else} \false, \true)$
+などがある。
+左辺の項に規則を繰り返し適用することで右辺を導出できればいい。
+
+\begin{jexercise*}[3.5.5]
+  略
+\end{jexercise*}
+\begin{jdefinition}[導出に関する帰納法]
+  $P$ を導出木に関する述語とする。
+  評価判断 $t \to t'$ を根とする任意の導出木 $T$ について、「$T$ より小さい、$t \to t'$ を根とする任意の導出木 $S$ について $P(S)$」ならば $P(T)$ であるとするとき、$t \to t'$ を根とする任意の導出木 $T$ について $P(T)$ が成り立つ。
+\end{jdefinition}
+
+「導出」の定義が述べられていないが、「導出の根」といった語があることから、導出木のことをいっているのだと予想する。
+
+\begin{jtheorem*}[3.5.7]
+  すべての値は正規形である。すなわち、値を評価して別の項にすることはできない。
+\end{jtheorem*}
+
+この定理はすべての言語について成り立つ{\bf べき}。
+
+\begin{jdefinition}[多ステップ評価関係 $\to^*$ の定義]
+  多ステップ評価関係 $\to^*$ とは、次の3つの推論規則を満たす、項に関する最小の2項関係である。
+
+  \begin{screen}
+    \infax[E-Epsilon]{t \to^* t}
+
+    \infrule[E-IfTrue]
+    {
+      t_1 \to^* \true
+      \andalso t_2 \to^* t'_2
+    }
+    {
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t'_2
+    }
+
+    \infrule[E-IfFalse]
+    {
+      t_1 \to^* \false
+      \andalso t_3 \to^* t'_3
+    }
+    {
+      \operatorname{if} t_1 \then t_2 \operatorname{else} t_3 \to^* t'_3
+    }
+  \end{screen}
+\end{jdefinition}
+\begin{jremark*}
+  これは演習3.5.10.の解答になる。
+  後述される大ステップ評価 $\Downarrow$ とは異なり、「中間の状態」に遷移できる。
+\end{jremark*}
+
+\begin{jexercise*}[3.5.13]
+  略
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{description}
+    \item[(1)]
+      定理 3.5.4. (1ステップ評価の決定性) は成り立たなくなる。
+      例えば、項 $\operatorname{if} \true \then \true \operatorname{else} \false$ を1ステップ評価した結果が $\true$ にも $\false$ にもなりえるため。
+      同時に、定理 3.5.11. (正規形の一意性) も失われる。
+
+      他の3つ、定理 3.5.7. (すべての値が正規形であること)、
+      定理 3.5.8. (正規形がすべて値であること)、
+      定理 3.5.12. (評価の停止性) は保たれる。
+    \item[(2)]
+      定理 3.5.4. (1ステップ評価の決定性) は成り立たなくなる。
+      例えば、項
+      $
+        \operatorname{if}
+          (\operatorname{if} \true
+            \then \true
+            \operatorname{else} \false
+          )
+        \then
+          (\operatorname{if} \true
+            \then \true
+            \operatorname{else} \false
+          )
+        \operatorname{else} \false
+      $
+      を1ステップ評価した結果は2通りある。
+      ただし、規則の適用の仕方によらず正規形は一意であるため、定理 3.5.11. (正規形の一意性) は保たれる。
+      このことの証明は後述する。
+      他の3つは証明を含めて保たれる。
+  \end{description}
+\end{itembox}
+
+\begin{jtheorem}[正規形の一意性]
+  図 3-1 の体系に規則 (E-Funny2) を加えた体系において、正規形は一意である。
+\end{jtheorem}
+\begin{jproof}
+  任意の項 $t$ をとる。
+  深さに関する帰納法により証明する。
+  $t$ が正規形 ($\true$ または $\false$) である場合は明らか。
+  $t$ が正規形でない、すなわち項 $\IfThenElse{t_1}{t_2}{t_3}$ に等しいとする。
+  帰納法の仮定と評価の停止性より、
+    $t_1 \to^* u_1$、
+    $t_2 \to^* u_2$
+  となる正規形 $u_1$ と $u_2$ が一意に存在する。
+  $t_1 \not= u_1$, $t_2 \not= u_2$ の場合を考える。
+  このとき
+    $t_1 \to t'_1$ となる項 $t'_1$ と、
+    $t_2 \to t'_2$ となる項 $t'_2$
+  がある。
+  規則 (E-If) より $t \to \IfThenElse{t'_1}{t_2}{t_3}$ であるが、これに規則 (E-Funny2) を適用すると $\IfThenElse{t'_1}{t'_2}{t_3}$ に評価される。
+  この項は $t$ より真に小さいので、正規形 $u$ に一意に評価される。
+  まとめると、次のような評価列になる。
+  \begin{align*}
+    t
+    & \to \IfThenElse{t'_1}{t_2}{t_3}
+    \\ & \to \IfThenElse{t'_1}{t'_2}{t_3}
+    \\ & \to^* u
+  \end{align*}
+  一方、$t$ に規則 (E-Funny2) を適用すると、同様の議論により次の評価列を得る。
+  \begin{align*}
+    t
+    & \to \IfThenElse{t_1}{t'_2}{t_3}
+    \\ & \to \IfThenElse{t'_1}{t'_2}{t_3}
+    \\ & \to^* v
+  \end{align*}
+  ここで、項 $\IfThenElse{t'_1}{t'_2}{t_3}$ の正規形は $u$ であったから、$u = v$ が分かる。
+  したがって、$t$ の正規形は $u$ でなければならない。
+
+  他のケース ($t_1 = u_1$ など) も似たような議論により示せる。
+  \qed
+\end{jproof}
+
+算術演算を加えた体系を NB と呼ぶ。
+
+\begin{jexercise*}[3.5.14.]
+  NB の評価の決定性を示せ。
+\end{jexercise*}
+\begin{jproof}
+  $t \to t'$ かつ $t \to t''$ とする。
+  導出に関する帰納法により示す。
+  $t \to t'$ の導出の最後の規則について検討する。
+  \begin{description}
+    \item[(E-IfTrue) の場合]
+      $t = \IfThenElse{\true}{t_2}{t_3}$ であり、$t \to t''$ の導出の最後の規則も (E-IfTrue) でなければならないため。
+    \item[(E-IfFalse) の場合]
+      (E-IfTrue) の場合と同様。
+    \item[(E-If) の場合]
+      $t = \IfThenElse{t_1}{t_2}{t_3}$ であり、$t_1 \to t'_1$ となる $t'_1$ がある。
+      $t_1$ は正規形ではないので、$\true$ でも $\false$ でもない。
+      ゆえに、$t \to t''$ の導出の最後の規則は (E-If) でなければならず、$t_1 \to t''_1$ となる $t''_1$ がある。
+      帰納法の仮定より $t'_1 = t''_1$ であり、結果として $t' = t''$ がいえる。
+    \item[(E-Succ) の場合]
+      $t = \operatorname{succ}(t_1)$ とおけて、$t_1 \to t'_1$ となる項 $t'_1$ がある。
+      $t$ の構造から、$t \to t''$ の導出の最後の規則も (E-Succ) でしかありえない。
+      ゆえに $t_1 \to t''1$ となる項 $t''_1$ がある。
+      帰納法の仮定より、$t'_1 = t''_1$ であり、$t' = t''$ がいえる。
+    \item[(E-Pred), (E-IsZero) の場合]
+      (E-Succ) の場合と同様。
+    \item[(E-PredZero), (E-PredSucc), (E-IsZeroZero) の場合]
+      (E-IfTrue) の場合と同様。
+  \end{description}
+\end{jproof}
+
+\begin{jexercise*}[3.5.16]
+  特殊な値 $\wrong$ を導入することにより、評価が行き詰まり状態 (値ではない正規形) にならないようにするという方法がある。
+  この方法と、「評価が行き詰まり状態になりうる」方法が「等しい」ことを定式化して証明せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  元の体系 ${\bf NB}$ に対して、$\wrong$ を加えた体系を ${\bf NB}+\wrong$ と呼ぶことにする。
+  2つの体系の実行時エラーの取り扱いが「等しい」ことは、「任意の項 $t$ について、体系 ${\bf NB}$ における $t$ の正規形が行き詰まり状態であるとき、かつそのときにかぎり、体系 ${\bf NB}+\wrong$ における $t$ の正規形が $\wrong$ である」ことを示せばよい。
+
+  任意の項 $t$ をとる。
+  ${\bf NB}$ における $t$ の正規形 $u$ が行き詰まり状態であるとする。
+  $u$ の構造について場合分けして考える。
+  $u = \IfThenElse{t_1}{t_2}{t_3}$ の場合、$u$ が正規形であることから、$t_1$ は $\true$ でも $\false$ でもない正規形、すなわち $\operatorname{badbool}$ ($\wrong$ または自然数) である。
+  ゆえに、体系 ${\bf NB}+\wrong$ では規則 (E-If-Wrong) が適用できて、$u \to \wrong$ ひいては $t \to^* \wrong$ となる。
+  $u = \operatorname{succ}(t_1)$ の場合、$u$ が正規形であることから、$t_1$ は自然数ではない正規形、すなわち $\operatorname{badnat}$ ($\wrong$ または $\true$ または $\false$) である。
+  ゆえに、体系 ${\bf NB}+\wrong$ では規則 (E-Succ-Wrong) が適用できて、$u \to \wrong$ ひいては $t \to^* \wrong$ となる。
+  $u$ が $\operatorname{pred}(t_1)$ か $\operatorname{iszero}(t_1)$ の場合も同様。
+
+  次に、${\bf NB}+\wrong$ における $t$ の正規形が $\wrong$ であるとする。
+  $t \to^* u \to \wrong$ となる $u$ がある。
+  $u \to \wrong$ の導出の最後の規則は、(E-IfWrong) などの4つの規則のいずれか。
+  いずれにせよ、$u$ は体系 ${\bf NB}$ の行き詰まり状態であることが分かる。
+  \qed
+\end{itembox}
+
+\begin{jexercise*}[3.5.17]
+  体系 ${\bf NB}$ の小ステップ意味論と大ステップ意味論が一致することを示せ。
+\end{jexercise*}
+\begin{jproof}
+  任意の項 $t$ をとる。
+  ある値 $v$ で、$t \to^* v$ となるものがあるとする。
+  項 $t$ の構造に関する帰納法により、$t \Downarrow v$ を示そう。
+  \begin{description}
+    \item[$t = \IfThenElse{t_1}{t_2}{t_3}$ の場合]
+      $t_1 \to^* \true$ または $t_1 \to^* \false$ である。
+      (
+        仮にもしどちらでもないとすると、$t_1$ の正規形は行き詰まり状態である。
+        そのとき $t$ の正規形 $v$ も行き詰まり状態ということになり、$v$ が値であることと矛盾する。
+      )
+      まず $t_1 \to^* true$ と仮定する。
+      $t$ の直接の部分項 $t_1$ について帰納法の仮定を用いることにより、$t_1 \Downarrow \true$ がいえる。
+      さらに、$t \to^* \IfThenElse{\true}{t_2}{t_3} \to t_2 \to^* v$ となるから、帰納法の仮定より $t_2 \Downarrow v$ がいえる。
+      したがって、規則 (B-IfTrue) より $t \Downarrow v$ がいえた。
+      $t_1 \to^* \false$ の場合も同様。
+    \item[$t = \operatorname{succ}(t_1)$ の場合]
+      ある自然数項 $v_1$ で、$t_1 \to^* v_1$ となるものがある。
+      (仮にそうでなければ、$t_1$ の正規形は行き詰まり状態であり、$t$ の正規形 $v$ も行き詰まり状態であることになってしまうため。)
+      帰納法の仮定より $t_1 \Downarrow v_1$ であるから、規則 (B-Succ) より $t \Downarrow \operatorname{succ}(v_1)$ が成り立つ。
+      $t_1 \to^* v_1$ より、規則 (E-Succ) を繰り返し適用することにより、$v = \operatorname{succ}(v_1)$ を得る。
+      したがって $t \Downarrow v$ が分かった。
+    \item[$t = \operatorname{pred}(t_1)$ の場合]
+      $t_1 \to^* 0$ であるか、ある自然数項 $v_1$ で $t_1 \to^* \operatorname{succ}(v_1)$ となるものがあるかの、どちらかである。
+      (仮にどちらでもないとすると $v$ が値であることと矛盾する。)
+      $t_1 \to^* 0$ の場合、$v = 0$ が分かる。帰納法の仮定より $t_1 \Downarrow 0$ であるから、規則 (B-PredZero) により $t \Downarrow 0$ が分かる。
+      $t_1 \to^* \operatorname{succ}(v_1)$ の場合、帰納法の仮定より $t_1 \Downarrow \operatorname{succ}(v_1)$ であるから、規則 (B-PredSucc) により、$t \Downarrow v$ が分かる。
+    \item[$t = \operatorname{iszero}(t_1)$ の場合]
+      同様。
+  \end{description}
+
+  次に、ある値 $v$ で $t \Downarrow v$ となるものがあるとする。
+  $t \Downarrow v$ の導出に関する帰納法により、$t \to^* v$ を示そう。
+  導出の最後の規則について場合分けして考える。
+  \begin{description}
+    \item[(B-Value) の場合]
+      $t = v$ であるから、$t \to^* v$ がただちに分かる。
+    \item[(B-IfTrue) の場合]
+      $t = \IfThenElse{t_1}{t_2}{t_3}$ とおける。
+      それぞれ $t_1 \Downarrow \true$ と $t_2 \Downarrow v$ を根とする部分導出がある。
+      帰納法の仮定より、$t_1 \to^* \true$ と $t_2 \to^* v$ がいえる。
+      規則 (E-If) を繰り返し用いることにより、
+      \begin{align*}
+        t
+        & = \IfThenElse{t_1}{t_2}{t_3}
+        \\ & \to^* \IfThenElse{\true}{t_2}{t_3}
+        \\ & \to t_2
+        \\ & \to^* v
+      \end{align*}
+      となり、すなわち $t \to^* v$ がいえる。
+    \item[(B-IfFalse) の場合]
+      (B-IfTrue) の場合と同様。
+    \item[(B-Succ) の場合]
+      $t = \operatorname{succ}(t_1)$、$v = \operatorname{succ}(v_1)$ とおける。
+      $t_1 \Downarrow v_1$ を根とする部分導出がある。
+      帰納法の仮定より、$t_1 \to^* v_1$ である。
+      よって $\operatorname{succ}(t_1) \to^* \operatorname{succ}(v_1)$ 、
+      すなわち $t \to^* v$ を得る。
+    \item[(B-Pred), (B-IsZero) の場合]
+      (B-Succ) の場合と同様。
+    \item[(B-PredZero) の場合]
+      $t = \operatorname{pred}(t_1)$、$v = 0$ とおける。
+      $t_1 \Downarrow 0$ であり、帰納法の仮定より $t_1 \to^* 0$ となる。
+      ゆえに $t \to^* v$ を得る。
+    \item[(B-IsZeroZero), (B-IsZeroSucc) の場合]
+      (B-PredZero) の場合と同様。
+  \end{description}
+  \qed
+\end{jproof}
+
+\begin{jexercise*}(3.5.18.)
+  if 式の評価順序がthen節→else節→条件節になるような規則を与えよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  規則 (E-If) を取り除き、次の3つの規則を加えればよい。
+
+  \infrule[E-IfThen]
+  {
+    t_2 \to t'_2
+  }
+  {
+    \IfThenElse{t_1}{t_2}{t_3} \to \IfThenElse{t_1}{t'_2}{t_3}
+  }
+
+  \infrule[E-IfElse]
+  {
+    t_3 \to t'_3
+  }
+  {
+    \IfThenElse{t_1}{v_2}{t_3} \to \IfThenElse{t_1}{v_2}{t'_3}
+  }
+
+  \infrule[E-If]
+  {
+    t_1 \to t'_1
+  }
+  {
+    \IfThenElse{t_1}{v_2}{v_3} \to \IfThenElse{t'_1}{v_2}{v_3}
+  }
+\end{itembox}
