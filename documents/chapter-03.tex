@@ -376,3 +376,34 @@
   \end{description}
   \qed
 \end{jproof}
+
+\begin{jexercise*}(3.5.18.)
+  if 式の評価順序がthen節→else節→条件節になるような規則を与えよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  規則 (E-If) を取り除き、次の3つの規則を加えればよい。
+
+  \infrule[E-IfThen]
+  {
+    t_2 \to t'_2
+  }
+  {
+    \IfThenElse{t_1}{t_2}{t_3} \to \IfThenElse{t_1}{t'_2}{t_3}
+  }
+
+  \infrule[E-IfElse]
+  {
+    t_3 \to t'_3
+  }
+  {
+    \IfThenElse{t_1}{v_2}{t_3} \to \IfThenElse{t_1}{v_2}{t'_3}
+  }
+
+  \infrule[E-If]
+  {
+    t_1 \to t'_1
+  }
+  {
+    \IfThenElse{t_1}{v_2}{v_3} \to \IfThenElse{t'_1}{v_2}{v_3}
+  }
+\end{itembox}
