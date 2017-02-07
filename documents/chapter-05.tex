@@ -69,5 +69,38 @@ Church自然数は関数の冪乗として定義される。
 \end{jexercise*}
 
 \begin{jexercise*}[5.2.5]
-  $\monus = \lambda m n. n \operatorname{pred} m$
+  $\op{monus} = \lambda m n. n \op{pred} m$
 \end{jexercise*}
+
+\begin{jexercise*}[5.2.6]
+  自然数 $n$ について、\code{pred n} を正規形まで評価するときの計算量を求めよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  概算でよいとのことなので、\code{snd (pair x y)} $\to$ {y} のような演算は1ステップと数える。
+
+  $n$ の前者 ($n - 1$ または $0$) を $m$ とおく。
+  \code{n ss zz} $\to^*$ \code{pair m n} かつ、その評価のステップ数が $O(n)$ であることは、数学的帰納法により示せる。
+  実際、任意の $n \in \bbN$ をとる。
+  $n = 0$ のとき、
+    \code{n ss zz}
+    = \code{0 ss zz}
+    $\to$ \code{zz}
+    = \code{pair 0 0}
+  より、1ステップで正規形に評価できる。
+  次に $n > 0$ とする。
+  $m = n - 1$ とおく。
+  $m$ の前者を $l$ とおく。
+  \begin{align*}
+    \code{n ss zz} & = \code{(succ m) ss zz}
+    \\ & \to \code{ss (m ss zz)}
+    \\ & \to^* \code{ss (pair l m)}
+    \\ & \to \code{pair (snd (pair l m)) (succ (snd (pair l m)))}
+    \\ & \to \code{pair m (succ (snd (pair l m)))}
+    \\ & \to \code{pair m (succ m)}
+    \\ & = \code{pair m n}
+  \end{align*}
+  となる。
+  ステップ数は、帰納法の仮定より $\to^*$ の部分が $O(n)$ であるから、全体も $O(n)$ である。
+
+  \code{pred n = fst (n ss zz)} より、ステップ数は $O(n)$ である。
+\end{itembox}
