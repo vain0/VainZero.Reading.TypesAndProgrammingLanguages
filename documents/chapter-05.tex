@@ -104,3 +104,11 @@ Church自然数は関数の冪乗として定義される。
 
   \code{pred n = fst (n ss zz)} より、ステップ数は $O(n)$ である。
 \end{itembox}
+
+\begin{jexercise*}[5.2.7]
+  \code{equal} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  $\operatorname{equal}(n, m) \iff n \leq m \land n \geq m$ であるから、$\leq$ を表す項を定義すればよい。
+  $n \leq m \iff \operatorname{monus}(n, m) = 0$ であるから、これは \code{iszero} と演習 5.2.5. の \code{monus} を組み合わせて簡単に定義できる。
+\end{itembox}
