@@ -130,3 +130,26 @@ Church自然数は関数の冪乗として定義される。
       & = ...
   \end{align*}
 \end{itembox}
+
+Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n + 1$) を表す Church 自然数そのものではなく、それと {\bf 振る舞い等価な} ラムダ項にしかならない。これは評価戦略により、ラムダ項の内側が簡約されないため。
+
+正規形を持たない (どれだけ簡約しても正規形に到達しない) 項は、{\bf 発散} するという。\code{omega} は明らかに発散する。
+
+\[
+  \text{\code{omega = ($\lambda$ x. x x) ($\lambda$ x. x x)}}
+\]
+
+\begin{jexercise*}[5.2.9]
+  \code{if} を使わずに階乗関数 \code{factorial} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    factorial =
+      fix ($\lambda$ factorial n.
+        ((eq n 0)
+          ($\lambda$ \_. 1)
+          ($\lambda$ \_. times n (factorial (pred n)))
+        ) unit
+      )
+  }
+\end{itembox}
