@@ -168,3 +168,10 @@ Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n
       )
   }
 \end{itembox}
+
+\begin{jexercise*}[5.2.11]
+  Church リストの総和を計算する関数を書け。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{church-sum = $\lambda$ xs. xs church-add church-zero}
+\end{itembox}
