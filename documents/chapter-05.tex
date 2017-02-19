@@ -153,3 +153,18 @@ Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n
       )
   }
 \end{itembox}
+
+\begin{jexercise*}[5.2.10]
+  プリミティブな自然数を Church 自然数に変換する関数 \code{church-nat} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    church-nat =
+      fix ($\lambda$ church-nat n.
+        if iszero n then
+          church-0
+        else
+          church-succ (church-nat (pred n))
+      )
+  }
+\end{itembox}
