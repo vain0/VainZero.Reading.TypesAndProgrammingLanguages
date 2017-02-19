@@ -175,3 +175,34 @@ Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n
 \begin{itembox}[l]{解答}
   \code{church-sum = $\lambda$ xs. xs church-add church-zero}
 \end{itembox}
+
+\section{形式的議論}
+
+\begin{jexercise*}[5.3.3]
+  任意の項 $t$ について $\abs{\operatorname{FV}(t)} \leq \operatorname{size}(t)$ が成り立つ。
+\end{jexercise*}
+\begin{jproof}
+  項の構造に関する帰納法により示す。
+  \begin{description}
+    \item[$t = x$ (変数) のとき]
+      両辺ともに 1。
+    \item[$t = \lambda x. t'$ のとき]
+      \begin{align*}
+        \abs{\operatorname{FV}(t)}
+          & \leq \abs{\operatorname{FV}(t')}
+        \\ & \leq \operatorname{size}(t')
+        \\ & = \operatorname{size}(t) - 1
+        \\ & \leq \operatorname{size}(t)
+      \end{align*}
+    \item[$t = f t'$ のとき]
+      \begin{align*}
+        \abs{\operatorname{FV}(t)}
+          & = \abs{\operatorname{FV}(f) \cup \operatorname{FV}(t')}
+        \\ & \leq \abs{\operatorname{FV}(f)} + \abs{\operatorname{FV}(t')}
+        \\ & \leq \operatorname{size}(f) + \operatorname{size}(t')
+        \\ & = \operatorname{size}(t) - 1
+        \\ & < \operatorname{size}(t)
+      \end{align*}
+  \end{description}
+  \qed
+\end{jproof}
