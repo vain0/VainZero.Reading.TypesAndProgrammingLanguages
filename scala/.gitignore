@@ -23,7 +23,8 @@ project/plugins/project/
 .ensime
 
 # Intellij IDEA
-.idea/libraries/**.xml
+.idea/dictionaries/**/*.xml
+.idea/libraries/**/*.xml
 .idea/tasks.xml
 .idea/workspace.xml
 gradle.xml
