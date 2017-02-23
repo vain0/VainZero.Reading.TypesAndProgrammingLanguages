@@ -7,7 +7,7 @@ class EvaluatorTest
     with TableDrivenPropertyChecks
     with ExpressionHelper {
   val id: Expression[Int] = vFun("x")(v0)
-  test("EvaluateOne") {
+  test("evaluateOne") {
     val advanceCases =
       Table(
         ("expression", "expected"),
@@ -22,7 +22,7 @@ class EvaluatorTest
         )
       )
     forAll(advanceCases) { (expression, expected) =>
-      assertResult(expected) { Evaluator.EvaluateOne(expression) }
+      assertResult(expected) { Evaluator.evaluateOne(expression) }
     }
 
     val stuckCases =
@@ -33,12 +33,12 @@ class EvaluatorTest
         vFun("x")(vApp(id)(id))
       )
     forAll(stuckCases) { expression =>
-      assertResult(expression) { Evaluator.EvaluateOne(expression) }
+      assertResult(expression) { Evaluator.evaluateOne(expression) }
     }
   }
 
-  test("EvaluateMany") {
+  test("evaluateMany") {
     val expression = vApp(vFun("x")(vApp(id)(id)))(id)
-    assert(Evaluator.EvaluateMany(expression) == id)
+    assert(Evaluator.evaluateMany(expression) == id)
   }
 }

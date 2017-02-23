@@ -2,17 +2,17 @@ package vain0.tapl.untyped
 
 object Evaluator {
   // Evaluates one step.
-  def EvaluateOne(expression: Expression[Int]): Expression[Int] = {
+  def evaluateOne(expression: Expression[Int]): Expression[Int] = {
     expression match {
       case AppExpression(FunExpression(_, body), argument)
         if argument.isValue =>
         body.substituteTop(argument)
       case AppExpression(function, argument)
         if function.isValue =>
-        val argument1 = EvaluateOne(argument)
+        val argument1 = evaluateOne(argument)
         AppExpression(function, argument1)
       case AppExpression(function, argument) =>
-        val function1 = EvaluateOne(function)
+        val function1 = evaluateOne(function)
         AppExpression(function1, argument)
       case
         VarExpression(_)
@@ -22,12 +22,12 @@ object Evaluator {
   }
 
   // Evaluates step by step as possible.
-  def EvaluateMany(expression: Expression[Int]): Expression[Int] = {
-    val expression1 = EvaluateOne(expression)
+  def evaluateMany(expression: Expression[Int]): Expression[Int] = {
+    val expression1 = evaluateOne(expression)
     if (expression == expression1) {
       expression
     } else {
-      EvaluateMany(expression1)
+      evaluateMany(expression1)
     }
   }
 }
