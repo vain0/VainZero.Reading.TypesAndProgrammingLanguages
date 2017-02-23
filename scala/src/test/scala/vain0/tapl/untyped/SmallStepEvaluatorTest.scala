@@ -2,10 +2,11 @@ package vain0.tapl.untyped
 import org.scalatest._
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-class EvaluatorTest
+class SmallStepEvaluatorTest
   extends FunSuite
     with TableDrivenPropertyChecks
     with ExpressionHelper {
+  val evaluator = SmallStepEvaluator
   val id: Expression[Int] = vFun("x")(v0)
   test("evaluateOne") {
     val advanceCases =
@@ -22,7 +23,7 @@ class EvaluatorTest
         )
       )
     forAll(advanceCases) { (expression, expected) =>
-      assertResult(expected) { Evaluator.evaluateOne(expression) }
+      assertResult(expected) { evaluator.evaluateOne(expression) }
     }
 
     val stuckCases =
@@ -33,12 +34,12 @@ class EvaluatorTest
         vFun("x")(vApp(id)(id))
       )
     forAll(stuckCases) { expression =>
-      assertResult(expression) { Evaluator.evaluateOne(expression) }
+      assertResult(expression) { evaluator.evaluateOne(expression) }
     }
   }
 
   test("evaluateMany") {
     val expression = vApp(vFun("x")(vApp(id)(id)))(id)
-    assert(Evaluator.evaluateMany(expression) == id)
+    assert(evaluator.evaluateMany(expression) == id)
   }
 }

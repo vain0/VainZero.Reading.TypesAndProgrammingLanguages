@@ -1,6 +1,6 @@
 package vain0.tapl.untyped
 
-object Evaluator {
+object SmallStepEvaluator {
   // Evaluates one step.
   def evaluateOne(expression: Expression[Int]): Expression[Int] = {
     expression match {
