@@ -3,15 +3,10 @@ package vain0.tapl.untyped
 import io._
 
 object Repl {
-  private def evaluate(source: String) =
-    for {
-      nominalExpression <- Parsers.parseExpression(source)
-      indexedExpression <- nominalExpression.varNameToIndex
-      value = SmallStepEvaluator.evaluate(indexedExpression)
-    } yield value
+  val evaluator = SmallStepEvaluator
 
   private def evaluatePrint(source: String) =
-    evaluate(source) match {
+    evaluator.evaluateSource(source) match {
       case Left(message) =>
         Console.err.println(message)
       case Right(expression) =>
