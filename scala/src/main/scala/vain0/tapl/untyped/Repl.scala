@@ -7,7 +7,7 @@ object Repl {
     for {
       nominalExpression <- Parsers.parseExpression(source)
       indexedExpression <- nominalExpression.varNameToIndex
-      value = SmallStepEvaluator.evaluateMany(indexedExpression)
+      value = SmallStepEvaluator.evaluate(indexedExpression)
     } yield value
 
   private def evaluatePrint(source: String) =

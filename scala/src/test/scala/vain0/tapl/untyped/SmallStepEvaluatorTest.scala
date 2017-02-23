@@ -38,8 +38,8 @@ class SmallStepEvaluatorTest
     }
   }
 
-  test("evaluateMany") {
+  test("evaluate") {
     val expression = vApp(vFun("x")(vApp(id)(id)))(id)
-    assert(evaluator.evaluateMany(expression) == id)
+    assert(evaluator.evaluate(expression) == id)
   }
 }

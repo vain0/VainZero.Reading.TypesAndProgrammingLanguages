@@ -22,12 +22,12 @@ object SmallStepEvaluator {
   }
 
   // Evaluates step by step as possible.
-  def evaluateMany(expression: Expression[Int]): Expression[Int] = {
+  def evaluate(expression: Expression[Int]): Expression[Int] = {
     val expression1 = evaluateOne(expression)
     if (expression == expression1) {
       expression
     } else {
-      evaluateMany(expression1)
+      evaluate(expression1)
     }
   }
 }
