@@ -1,0 +1,224 @@
+\chapter{型無しラムダ計算}
+
+\section{基礎}
+
+\section{ラムダ計算でのプログラミング}
+
+\begin{jdefinition}
+  \begin{align*}
+    \true & = \lambda x y. x
+    \\ \false & = \lambda x y. y
+  \end{align*}
+\end{jdefinition}
+
+真偽値がif式の機能を持つのが興味深い。
+唐突に意識を高めると、「ラムダ項による定義はその値の本質的な操作を表している」といえそうだ。
+
+\begin{jexercise*}[5.2.1]
+  or, not を表すラムダ抽象を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{itemize}
+    \item
+      $\operatorname{or}(l, r) = \IfThenElse{l}{\true}{r}$ であるから、
+      $\operatorname{or} = \lambda l r. l \true r$
+      と定義すればよい。
+    \item
+      $\operatorname{not} = \lambda x. x \false \true$
+  \end{itemize}
+\end{itembox}
+
+\begin{align*}
+  \operatorname{pair} & = \lambda x y p. p x y
+  \\ \operatorname{fst} & = \lambda t. t \true
+  \\ \operatorname{snd} & = \lambda t. t \false
+\end{align*}
+
+ペアの構築子は「要素と射影を受け取る関数」として定められる。
+射影関数はそのまま、要素の列から1つの値を選択する関数である。
+$\true$、$\false$ はペアの射影関数にもなっている。(偶然？)
+
+\begin{align*}
+  c_0 & = \lambda f x. x
+  \\ c_1 & = \lambda f x. f x
+  \\ c_2 & = \lambda f x. f (f x)
+  \\ c_{i+1} & = \lambda f x. f (c_i f x)
+  \\ \operatorname{succ} & = \lambda n f x. f (n f x)
+\end{align*}
+
+Church自然数は関数の冪乗として定義される。
+
+\begin{jexercise*}[5.2.2]
+  Chuch数の後者関数 $\operatorname{succ}$ を別の方法で定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{align*}
+    \operatorname{succ} = \lambda n f x. n f (f x)
+  \end{align*}
+\end{itembox}
+
+\begin{jexercise*}[5.2.3]
+  $\operatorname{plus}$ を用いずにChurch数の乗算を定義できるか。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  少なくとも私には思いつかない。
+\end{itembox}
+
+\begin{jexercise*}[3.2.4]
+  $\operatorname{power} = \lambda m n. n (\operatorname{times} m) 1$
+\end{jexercise*}
+
+\begin{jexercise*}[5.2.5]
+  $\op{monus} = \lambda m n. n \op{pred} m$
+\end{jexercise*}
+
+\begin{jexercise*}[5.2.6]
+  自然数 $n$ について、\code{pred n} を正規形まで評価するときの計算量を求めよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  概算でよいとのことなので、\code{snd (pair x y)} $\to$ {y} のような演算は1ステップと数える。
+
+  $n$ の前者 ($n - 1$ または $0$) を $m$ とおく。
+  \code{n ss zz} $\to^*$ \code{pair m n} かつ、その評価のステップ数が $O(n)$ であることは、数学的帰納法により示せる。
+  実際、任意の $n \in \bbN$ をとる。
+  $n = 0$ のとき、
+    \code{n ss zz}
+    = \code{0 ss zz}
+    $\to$ \code{zz}
+    = \code{pair 0 0}
+  より、1ステップで正規形に評価できる。
+  次に $n > 0$ とする。
+  $m = n - 1$ とおく。
+  $m$ の前者を $l$ とおく。
+  \begin{align*}
+    \code{n ss zz} & = \code{(succ m) ss zz}
+    \\ & \to \code{ss (m ss zz)}
+    \\ & \to^* \code{ss (pair l m)}
+    \\ & \to \code{pair (snd (pair l m)) (succ (snd (pair l m)))}
+    \\ & \to \code{pair m (succ (snd (pair l m)))}
+    \\ & \to \code{pair m (succ m)}
+    \\ & = \code{pair m n}
+  \end{align*}
+  となる。
+  ステップ数は、帰納法の仮定より $\to^*$ の部分が $O(n)$ であるから、全体も $O(n)$ である。
+
+  \code{pred n = fst (n ss zz)} より、ステップ数は $O(n)$ である。
+\end{itembox}
+
+\begin{jexercise*}[5.2.7]
+  \code{equal} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  $\operatorname{equal}(n, m) \iff n \leq m \land n \geq m$ であるから、$\leq$ を表す項を定義すればよい。
+  $n \leq m \iff \operatorname{monus}(n, m) = 0$ であるから、これは \code{iszero} と演習 5.2.5. の \code{monus} を組み合わせて簡単に定義できる。
+\end{itembox}
+
+\begin{jexercise*}[5.2.8]
+  Church リストを定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{align*}
+    \text{\code{nil}}
+      & = \text{\code{$\lambda$ f z. z}}
+    \\ \text{\code{cons}}
+      & = \text{\code{$\lambda$ x xs f z. f x (xs f z)}}
+    \\ \text{\code{isnil}}
+      & = \text{\code{$\lambda$ xs. xs ($\lambda$ \_ \_. false) true}}
+    \\ \text{\code{head}}
+      & = \text{\code{$\lambda$ xs. xs ($\lambda$ x \_. some x) none}}
+    \\ \text{\code{tail}}
+      & = ...
+  \end{align*}
+\end{itembox}
+
+Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n + 1$) を表す Church 自然数そのものではなく、それと {\bf 振る舞い等価な} ラムダ項にしかならない。これは評価戦略により、ラムダ項の内側が簡約されないため。
+
+正規形を持たない (どれだけ簡約しても正規形に到達しない) 項は、{\bf 発散} するという。\code{omega} は明らかに発散する。
+
+\[
+  \text{\code{omega = ($\lambda$ x. x x) ($\lambda$ x. x x)}}
+\]
+
+\begin{jexercise*}[5.2.9]
+  \code{if} を使わずに階乗関数 \code{factorial} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    factorial =
+      fix ($\lambda$ factorial n.
+        ((eq n 0)
+          ($\lambda$ \_. 1)
+          ($\lambda$ \_. times n (factorial (pred n)))
+        ) unit
+      )
+  }
+\end{itembox}
+
+\begin{jexercise*}[5.2.10]
+  プリミティブな自然数を Church 自然数に変換する関数 \code{church-nat} を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    church-nat =
+      fix ($\lambda$ church-nat n.
+        if iszero n then
+          church-0
+        else
+          church-succ (church-nat (pred n))
+      )
+  }
+\end{itembox}
+
+\begin{jexercise*}[5.2.11]
+  Church リストの総和を計算する関数を書け。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{church-sum = $\lambda$ xs. xs church-add church-zero}
+\end{itembox}
+
+\section{形式的議論}
+
+\begin{jexercise*}[5.3.3]
+  任意の項 $t$ について $\abs{\operatorname{FV}(t)} \leq \operatorname{size}(t)$ が成り立つ。
+\end{jexercise*}
+\begin{jproof}
+  項の構造に関する帰納法により示す。
+  \begin{description}
+    \item[$t = x$ (変数) のとき]
+      両辺ともに 1。
+    \item[$t = \lambda x. t'$ のとき]
+      \begin{align*}
+        \abs{\operatorname{FV}(t)}
+          & \leq \abs{\operatorname{FV}(t')}
+        \\ & \leq \operatorname{size}(t')
+        \\ & = \operatorname{size}(t) - 1
+        \\ & \leq \operatorname{size}(t)
+      \end{align*}
+    \item[$t = f t'$ のとき]
+      \begin{align*}
+        \abs{\operatorname{FV}(t)}
+          & = \abs{\operatorname{FV}(f) \cup \operatorname{FV}(t')}
+        \\ & \leq \abs{\operatorname{FV}(f)} + \abs{\operatorname{FV}(t')}
+        \\ & \leq \operatorname{size}(f) + \operatorname{size}(t')
+        \\ & = \operatorname{size}(t) - 1
+        \\ & < \operatorname{size}(t)
+      \end{align*}
+  \end{description}
+  \qed
+\end{jproof}
+
+\begin{jexercise*}[5.3.8]
+  純粋ラムダ計算の大ステップ評価関係を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{screen}
+    \infax[B-Value]{v \Downarrow v}
+
+    \infrule[B-App]
+    {
+      t_1 \Downarrow \lambda x. t'_1
+      \andalso \subst{x}{t_2} t'_1 \Downarrow v
+    }
+    {t_1 t_2 \Downarrow v}
+  \end{screen}
+\end{itembox}
