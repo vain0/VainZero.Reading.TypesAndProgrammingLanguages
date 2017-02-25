@@ -206,3 +206,19 @@ Church 自然数 \code{n} に \code{succ} を適用した項は、\code{m} ($= n
   \end{description}
   \qed
 \end{jproof}
+
+\begin{jexercise*}[5.3.8]
+  純粋ラムダ計算の大ステップ評価関係を定義せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{screen}
+    \infax[B-Value]{v \Downarrow v}
+
+    \infrule[B-App]
+    {
+      t_1 \Downarrow \lambda x. t'_1
+      \andalso \subst{x}{t_2} t'_1 \Downarrow v
+    }
+    {t_1 t_2 \Downarrow v}
+  \end{screen}
+\end{itembox}
