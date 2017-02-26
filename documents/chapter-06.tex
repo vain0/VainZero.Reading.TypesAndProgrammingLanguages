@@ -1,1 +1,18 @@
 \chapter{項の名無し表現}
+
+\section{項と文脈}
+
+\begin{jexercise*}[6.1.1]
+  コンビネーターを名無し項に変換せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{$c_0$ = $\lambda$. $\lambda$. 0}
+
+  \code{$c_2$ = $\lambda$. $\lambda$. 1 (1 0)}
+
+  \code{plus = $\lambda$. $\lambda$. $\lambda$. $\lambda$. 3 1 (2 1 0)}
+
+  \code{fix = $\lambda$. ($\lambda$. 1 ($\lambda$. (1 1) 0)) ($\lambda$. 1 ($\lambda$. (1 1) 0))}
+
+  \code{foo = ($\lambda$. ($\lambda$. 0)) ($\lambda$. 0)}
+\end{itembox}
