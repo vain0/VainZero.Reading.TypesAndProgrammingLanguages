@@ -16,3 +16,20 @@
 
   \code{foo = ($\lambda$. ($\lambda$. 0)) ($\lambda$. 0)}
 \end{itembox}
+
+\section{シフトと代入}
+
+\begin{jexercise*}[6.2.2]
+  シフトされた項を計算せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    $\uparrow^2$($\lambda$. $\lambda$. 1 (0 2))
+    = $\lambda$. $\lambda$. 1 (0 4)
+  }
+
+  \code{
+    $\uparrow^2$($\lambda$. 0 1 ($\lambda$. 0 1 2))
+    = $\lambda$. 0 3 ($\lambda$. 0 1 4)
+  }
+\end{itembox}
