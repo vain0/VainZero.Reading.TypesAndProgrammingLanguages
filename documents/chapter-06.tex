@@ -1,0 +1,60 @@
+\chapter{項の名無し表現}
+
+\section{項と文脈}
+
+\begin{jexercise*}[6.1.1]
+  コンビネーターを名無し項に変換せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{$c_0$ = $\lambda$. $\lambda$. 0}
+
+  \code{$c_2$ = $\lambda$. $\lambda$. 1 (1 0)}
+
+  \code{plus = $\lambda$. $\lambda$. $\lambda$. $\lambda$. 3 1 (2 1 0)}
+
+  \code{fix = $\lambda$. ($\lambda$. 1 ($\lambda$. (1 1) 0)) ($\lambda$. 1 ($\lambda$. (1 1) 0))}
+
+  \code{foo = ($\lambda$. ($\lambda$. 0)) ($\lambda$. 0)}
+\end{itembox}
+
+\section{シフトと代入}
+
+\begin{jexercise*}[6.2.2]
+  シフトされた項を計算せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \code{
+    $\uparrow^2$($\lambda$. $\lambda$. 1 (0 2))
+    = $\lambda$. $\lambda$. 1 (0 4)
+  }
+
+  \code{
+    $\uparrow^2$($\lambda$. 0 1 ($\lambda$. 0 1 2))
+    = $\lambda$. 0 3 ($\lambda$. 0 1 4)
+  }
+\end{itembox}
+
+\begin{jexercise*}[6.2.5]
+  代入操作の結果を計算せよ。
+\end{jexercise*}
+\begin{itembox}[l]{解答}
+  \begin{enumerate}
+    \item
+      \code{$\subst{b}{a}$ (b ($\lambda$ x. $\lambda$ y. b))} を名無し項に変換して計算すると、
+      \code{$\subst{1}{0}$ (1 ($\lambda$. $\lambda$. 3))}
+      = \code{($\subst{1}{0}$ 1) ($\subst{1}{0}$ ($\lambda$. $\lambda$. 3))}
+      = \code{0 ($\lambda$. $\subst{2}{1}$ $\lambda$. 3)}
+      = \code{0 ($\lambda$. $\lambda$. $\subst{3}{2}$ 3)}
+      = \code{0 ($\lambda$. $\lambda$. 2)}
+      = \code{a ($\lambda$ x. $\lambda$ y. a)}
+      となり、通常の代入と同じ結果になる。
+
+    \item
+      \code{$\subst{b}{a (\lambda z. a)}$ (b ($\lambda$ x. b))}
+      = \code{$\subst{1}{0 (\lambda. 1)}$ (1 ($\lambda$. 2))}
+      = \code{($\subst{1}{0 (\lambda. 1)}$ 1) ($\subst{1}{0 (\lambda. 1)}$ ($\lambda$. 2))}
+      = \code{(0 ($\lambda$. 1)) ($\lambda$. $\subst{2}{1 (\lambda. 2)}$ 2)}
+      = \code{(0 ($\lambda$. 1)) ($\lambda$. (1 ($\lambda$. 2)))}
+      = \code{(a ($\lambda$ z. a)) ($\lambda$ x. (a ($\lambda$ z. a)))}
+  \end{enumerate}
+\end{itembox}
