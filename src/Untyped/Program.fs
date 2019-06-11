@@ -1,8 +1,25 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿module rec Untyped.Program
 
-open System
+open Untyped.Types
+open Untyped.Tokenize
+open Untyped.Parse
+open Untyped.Sema
+open Untyped.Eval
+open Untyped.Dump
+
+let run (text: string) =
+  text |> tokenize |> parse |> synToAst |> astToCommands |> eval |> dump
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+  let fileName =
+    match argv with
+    | [|fileName|] ->
+      fileName
+    | _ ->
+      failwith "USAGE: untyped <file-name>"
+  let text =
+    System.IO.File.ReadAllText(fileName)
+
+  printf "%s" (run text)
+  0

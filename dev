@@ -1,0 +1,11 @@
+#!/bin/bash
+
+sub=$1
+shift
+
+if [[ $sub = "untyped" ]]
+then
+    dotnet run -p src/Untyped -- src/Untyped/test.lambda
+else
+    >&2 echo "USAGE: ./dev untyped"
+fi
