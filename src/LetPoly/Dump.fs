@@ -39,8 +39,9 @@ let dumpErrors text errors acc =
 let dumpTerm nameCtx term acc =
   let ast = term |> termToIndexAst |> indexToNamedAst nameCtx
 
-  let isVar ast =
+  let isAtom ast =
     match ast with
+    | Ast.IntLit _
     | Ast.Var _ ->
       true
     | _ ->
@@ -58,19 +59,22 @@ let dumpTerm nameCtx term acc =
     | Ast.Var name ->
       acc |> cons name
 
+    | Ast.IntLit value ->
+      acc |> cons (string value)
+
     | Ast.Abs (name, body) ->
       acc |> cons "\\" |> cons name |> cons ". " |> go body
 
     | Ast.App (cal, arg) ->
       let acc =
-        if isApp cal || isVar cal then
+        if isAtom cal || isApp cal then
           acc |> go cal
         else
           acc |> cons "(" |> go cal |> cons ")"
       let acc =
         acc |> cons " "
       let acc =
-        if isVar arg then
+        if isAtom arg then
           acc |> go arg
         else
           acc |> cons "(" |> go arg |> cons ")"

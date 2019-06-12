@@ -7,6 +7,9 @@ type EvalContext = unit
 let termMap f c term =
   let rec go c term =
     match term with
+    | Term.IntLit _ ->
+      term
+
     | Term.Var (termId, dbi, ctxLen) ->
       f c termId dbi ctxLen
 

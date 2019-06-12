@@ -17,7 +17,7 @@ let main argv =
     | [|fileName|] ->
       fileName
     | _ ->
-      failwith "USAGE: untyped <file-name>"
+      failwith "USAGE: LetPoly <file-name>"
   let text =
     System.IO.File.ReadAllText(fileName)
 

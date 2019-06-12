@@ -63,6 +63,16 @@ let scanLine (acc: ScanAcc, text: string, i: int) =
       go (i + 1)
   acc, text, go i
 
+let scanIntLit (acc: ScanAcc, text: string, i: int) =
+  assert (text.[i] |> charIsDigit)
+  let rec go i =
+    if i < text.Length && text.[i] |> charIsDigit then
+      go (i + 1)
+    else
+      i
+  let endIndex = go i
+  (TokenKind.IntLit, (i, endIndex)) :: acc, text, endIndex
+
 let scanIdent (acc: ScanAcc, text: string, i: int) =
   assert (text.[i] |> charIsIdent && text.[i] |> charIsDigit |> not)
   let rec go i =
@@ -94,6 +104,8 @@ let scanAll (text: string) =
       ((TokenKind.Lambda, (i, i + 1)) :: acc, text, i + 1) |> go
     else if follow ";" then
       ((TokenKind.Semi, (i, i + 1)) :: acc, text, i + 1) |> go
+    else if text.[i] |> charIsDigit then
+      t |> scanIntLit |> go
     else if text.[i] |> charIsIdent then
       t |> scanIdent |> go
     else

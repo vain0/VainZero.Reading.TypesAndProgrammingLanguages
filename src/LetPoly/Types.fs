@@ -11,6 +11,7 @@ type TextRange = int * int
 /// Kind of tokens.
 type TokenKind =
   | Error
+  | IntLit
   | Ident
   /// `(`
   | ParenL
@@ -38,6 +39,9 @@ type Syn =
     of string * TextRange * Syn list
   | Token
     of Token
+  /// 42
+  | IntLit
+    of intLit:Syn
   /// x
   | Var
     of ident:Syn
@@ -57,6 +61,8 @@ type Syn =
 
 /// Node of abstract syntax tree.
 type Ast =
+  | IntLit
+    of int
   | Var
     of string
   | Abs
@@ -69,6 +75,8 @@ type Ast =
 /// Node of abstract syntax tree.
 /// Variables are de Bruijn indices.
 type IndexAst =
+  | IntLit
+    of int
   | Var
     of DeBruijnIndex * ContextLength
   | Abs
@@ -98,6 +106,8 @@ type TermData =
   | Unknown
 
 type Term =
+  | IntLit
+    of TermId * int
   | Var
     of TermId * DeBruijnIndex * ContextLength
   | Abs

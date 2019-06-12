@@ -26,6 +26,9 @@ let rec nameCtxPos name nameCtx =
 let astToFreeVars ast =
   let rec go nameCtx ast fvs =
     match ast with
+    | Ast.IntLit _ ->
+      fvs
+
     | Ast.Var name ->
       if nameCtxPos name nameCtx < 0 then
         name :: fvs
@@ -46,6 +49,9 @@ let astToFreeVars ast =
 
 let indexToNamedAst nameCtx iast =
   match iast with
+  | IndexAst.IntLit value ->
+    Ast.IntLit value
+
   | IndexAst.Var (dbi, ctxLen) ->
     let name = nameCtx  |> nameCtxNth dbi
     Ast.Var name
@@ -67,6 +73,9 @@ let indexToNamedAst nameCtx iast =
 
 let namedToIndexAst nameCtx ast =
   match ast with
+  | Ast.IntLit value ->
+    IndexAst.IntLit value
+
   | Ast.Var name ->
     let dbi = nameCtx |> nameCtxPos name
     let ctxLen = nameCtx |> nameCtxLen
@@ -91,6 +100,9 @@ let indexAstToTerm serial iast =
   let termId, serial = serial, serial + 1
 
   match iast with
+  | IndexAst.IntLit value ->
+    Term.IntLit (termId, value), serial
+
   | IndexAst.Var (dbi, ctxLen) ->
     Term.Var (termId, dbi, ctxLen), serial
 
@@ -108,6 +120,9 @@ let indexAstToTerm serial iast =
 
 let termToIndexAst term =
   match term with
+  | Term.IntLit (_, value) ->
+    IndexAst.IntLit value
+
   | Term.Var (_, dbi, ctxLen) ->
     IndexAst.Var (dbi, ctxLen)
 

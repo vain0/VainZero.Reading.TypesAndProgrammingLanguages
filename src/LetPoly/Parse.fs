@@ -64,6 +64,9 @@ let eatSemi tokens =
 
 let parseAtom tokens =
   match tokens with
+  | (TokenKind.IntLit, _) as token :: tokens ->
+    Syn.IntLit (Syn.Token token), tokens
+
   | (TokenKind.Ident, _) as token :: tokens ->
     Syn.Var (Syn.Token token), tokens
 
@@ -86,6 +89,7 @@ let parseApp tokens =
   let rec go cal tokens =
     match tokens with
     // `first(term) \ first(abs)`
+    | (TokenKind.IntLit, _) :: _
     | (TokenKind.Ident, _) :: _
     | (TokenKind.ParenL, _) :: _ ->
       let arg, tokens = parseAtom tokens
@@ -100,6 +104,7 @@ let parseApp tokens =
 
 let rec parseTerm tokens =
   match tokens with
+  | (TokenKind.IntLit, _) :: _
   | (TokenKind.Ident, _) :: _
   | (TokenKind.ParenL, _) :: _
   | (TokenKind.Lambda, _) :: _ ->
@@ -162,6 +167,14 @@ let synToAst (text: string, syn: Syn): string * Ast option * SynError list =
 
     | Syn.Token _ ->
       None, acc
+
+    | Syn.IntLit intLit ->
+      match intLit with
+      | Syn.Token (TokenKind.IntLit, (l, r)) ->
+        let value = text |> strSlice l r |> int // FIXME: error if parse error
+        Some (Ast.IntLit value), acc
+      | _ ->
+        None, acc
 
     | Syn.Var ident ->
       match ident with
