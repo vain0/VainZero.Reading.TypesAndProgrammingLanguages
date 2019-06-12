@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Tokenize.fs" />
+    <Compile Include="Parse.fs" />
+    <Compile Include="Sema.fs" />
+    <Compile Include="Eval.fs" />
+    <Compile Include="Dump.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
