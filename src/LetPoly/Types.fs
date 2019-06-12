@@ -20,6 +20,8 @@ type TokenKind =
   | Dot
   /// `\` (λ)
   | Lambda
+  /// `:`
+  | Colon
   /// `;`
   | Semi
 
@@ -39,6 +41,10 @@ type Syn =
     of string * TextRange * Syn list
   | Token
     of Token
+  | TyVar
+    of ident:Syn
+  | Ty
+    of Syn
   /// 42
   | IntLit
     of intLit:Syn
@@ -48,9 +54,9 @@ type Syn =
   /// (t)
   | Paren
     of parenL:Syn * body:Syn * parenR:Syn
-  /// \x. t
+  /// \x:X. t
   | Abs
-    of lambda:Syn * ident:Syn * dot:Syn * body:Syn
+    of lambda:Syn * ident:Syn * dot:Syn * colon:Syn * ty:Syn * body:Syn
   /// (callee, argument)
   /// f t
   | App
@@ -61,28 +67,32 @@ type Syn =
 
 /// Node of abstract syntax tree.
 type Ast =
+  | TyVar
+    of string
   | IntLit
     of int
   | Var
     of string
   | Abs
-    of string * Ast
+    of ident: string * ty: Ast * body: Ast
   | App
-    of Ast * Ast
+    of cal: Ast * arg:Ast
   | Semi
     of Ast * Ast
 
 /// Node of abstract syntax tree.
 /// Variables are de Bruijn indices.
 type IndexAst =
+  | TyVar
+    of int
   | IntLit
     of int
   | Var
     of DeBruijnIndex * ContextLength
   | Abs
-    of Name * IndexAst
+    of ident: Name * ty: IndexAst * body: IndexAst
   | App
-    of IndexAst * IndexAst
+    of cal: IndexAst * arg: IndexAst
   | Semi
     of IndexAst * IndexAst
 
@@ -114,6 +124,10 @@ type Term =
     of TermId * Name * Term
   | App
     of TermId * Term * Term
+
+type Ty =
+  | Con
+    of int
 
 type Command =
   | Eval

@@ -102,6 +102,8 @@ let scanAll (text: string) =
       ((TokenKind.Dot, (i, i + 1)) :: acc, text, i + 1) |> go
     else if follow "\\" then
       ((TokenKind.Lambda, (i, i + 1)) :: acc, text, i + 1) |> go
+    else if follow ":" then
+      ((TokenKind.Colon, (i, i + 1)) :: acc, text, i + 1) |> go
     else if follow ";" then
       ((TokenKind.Semi, (i, i + 1)) :: acc, text, i + 1) |> go
     else if text.[i] |> charIsDigit then

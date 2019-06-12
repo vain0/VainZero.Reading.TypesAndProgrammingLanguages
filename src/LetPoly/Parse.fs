@@ -34,6 +34,13 @@ let eatDot tokens =
   | _ ->
     Syn.Error ("Expected '.'", nextRange tokens, []), tokens
 
+let eatColon tokens =
+  match tokens with
+  | (TokenKind.Colon, _) as token :: tokens ->
+    Syn.Token token, tokens
+  | _ ->
+    Syn.Error ("Expected ':'", nextRange tokens, []), tokens
+
 let eatParenR leftParenRange tokens =
   match tokens with
   | (TokenKind.ParenR, _) as token :: tokens ->
@@ -62,6 +69,14 @@ let eatSemi tokens =
 // Parse non-terminals
 // -----------------------------------------------
 
+let parseTy tokens =
+  match tokens with
+  | (TokenKind.Ident, _) as token :: tokens ->
+    Syn.Var (Syn.Token token), tokens
+
+  | _ ->
+    Syn.Error ("Expected a type", nextRange tokens, []), tokens
+
 let parseAtom tokens =
   match tokens with
   | (TokenKind.IntLit, _) as token :: tokens ->
@@ -77,9 +92,11 @@ let parseAtom tokens =
 
   | (TokenKind.Lambda, _) as lambda :: tokens ->
     let ident, tokens = eatIdent tokens
+    let colon, tokens = eatColon tokens
+    let ty, tokens = parseTy tokens
     let dot, tokens = eatDot tokens
     let body, tokens = parseTerm tokens
-    Syn.Abs (Syn.Token lambda, ident, dot, body), tokens
+    Syn.Abs (Syn.Token lambda, ident, colon, ty, dot, body), tokens
 
   | _ ->
     Syn.Error ("Expected a term", nextRange tokens, []), tokens
@@ -168,6 +185,18 @@ let synToAst (text: string, syn: Syn): string * Ast option * SynError list =
     | Syn.Token _ ->
       None, acc
 
+    | Syn.TyVar ident ->
+      match ident with
+      | Syn.Token (TokenKind.Ident, (l, r)) ->
+        let ident = text |> strSlice l r
+        Some (Ast.TyVar ident), acc
+      | _ ->
+        None, acc
+
+    | Syn.Ty ty ->
+      assert (match ty with Syn.TyVar _ -> true | _ -> false)
+      go acc ty
+
     | Syn.IntLit intLit ->
       match intLit with
       | Syn.Token (TokenKind.IntLit, (l, r)) ->
@@ -190,7 +219,7 @@ let synToAst (text: string, syn: Syn): string * Ast option * SynError list =
       let _, acc = go acc parenR
       bodyAst, acc
 
-    | Syn.Abs (lambda, ident, dot, body) ->
+    | Syn.Abs (lambda, ident, dot, colon, ty, body) ->
       let _, acc = go acc lambda
 
       let ident, acc =
@@ -202,14 +231,16 @@ let synToAst (text: string, syn: Syn): string * Ast option * SynError list =
           let _, acc = go acc ident
           None, acc
 
+      let _, acc = go acc colon
+      let ty, acc = go acc ty
       let _, acc = go acc dot
 
       let bodyAst, acc = go acc body
 
       let ast =
-        match ident, bodyAst with
-        | Some ident, Some bodyAst ->
-          Some (Ast.Abs (ident, bodyAst))
+        match ident, ty, bodyAst with
+        | Some ident, Some ty, Some bodyAst ->
+          Some (Ast.Abs (ident, ty, bodyAst))
         | _ ->
           None
 
