@@ -12,4 +12,4 @@ let trim (s: string) =
 
 [<Fact>]
 let testParseIntLit () =
-  run """\_. 42""" |> trim |> is """\_. 42"""
+  run """\_. 42""" |> trim |> is """\_. 42 : ? -> Nat"""

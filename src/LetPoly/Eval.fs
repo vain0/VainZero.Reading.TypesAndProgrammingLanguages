@@ -3,6 +3,29 @@ module rec LetPoly.Eval
 
 type EvalContext = unit
 
+let tyRecon term =
+  let rec go term =
+    match term with
+    | Term.IntLit _ ->
+      Ty.Nat
+
+    | Term.Var _ ->
+      Ty.Any
+
+    | Term.Abs (_, _, body) ->
+      let tTy = go body
+      Ty.Fun (Ty.Any, tTy)
+
+    | Term.App (_, cal, arg) ->
+      let calTy = go cal
+      let argTy = go arg
+      match calTy with
+      | Ty.Fun (sTy, tTy) when sTy = argTy ->
+        tTy
+      | _ ->
+        Ty.Any
+  go term
+
 /// f: cut -> varTermId -> name -> deBruijnIndex -> contextLength -> term
 let termMap f c term =
   let rec go c term =
@@ -84,7 +107,7 @@ let evalTerm (term, ctx) =
 
   go term
 
-let evalCommands (commands: Command list, ctx: EvalContext): Term list * EvalContext =
+let evalCommands (commands: Command list, ctx: EvalContext) =
   let rec go acc ctx commands =
     match commands with
     | [] ->
@@ -92,7 +115,8 @@ let evalCommands (commands: Command list, ctx: EvalContext): Term list * EvalCon
 
     | Command.Eval term :: commands ->
       let term = evalTerm (term, ctx)
-      go (term :: acc) ctx commands
+      let ty = tyRecon term
+      go ((term, ty) :: acc) ctx commands
 
   go [] ctx commands
 

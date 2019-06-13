@@ -21,16 +21,24 @@ let locateTextRangeFromTop (text: string) (l: int) (r: int): TextRange * TextRan
   let ry, rx = locateTextPos (ly, lx) text l r
   (ly, lx), (ry, rx)
 
-let termIsAtom ast =
-  match ast with
+let tyIsAtom ty =
+  match ty with
+  | Ty.Any
+  | Ty.Nat _ ->
+    true
+  | _ ->
+    false
+
+let termIsAtom term =
+  match term with
   | Term.IntLit _
   | Term.Var _ ->
     true
   | _ ->
     false
 
-let termIsApp ast =
-  match ast with
+let termIsApp term =
+  match term with
   | Term.App _ ->
     true
   | _ ->
@@ -51,7 +59,33 @@ let dumpErrors text errors acc =
 
   acc |> go errors
 
-let dumpTerm term acc =
+let dumpTy ty acc =
+  let rec go ty acc =
+    match ty with
+    | Ty.Any ->
+      acc |> cons "?"
+
+    | Ty.Nat ->
+      acc |> cons "Nat"
+
+    | Ty.Fun (sTy, tTy) ->
+      let acc =
+        if tyIsAtom sTy then
+          acc |> go sTy
+        else
+          acc |> cons "(" |> go sTy |> cons ")"
+      let acc =
+        acc |> cons " -> "
+      let acc =
+        if tyIsAtom tTy then
+          acc |> go tTy
+        else
+          acc |> cons "(" |> go tTy |> cons ")"
+      acc
+
+  go ty acc
+
+let dumpTerm (term, ty) acc =
   let rec go term acc =
     match term with
     | Term.IntLit (_, value) ->
@@ -78,7 +112,7 @@ let dumpTerm term acc =
           acc |> cons "(" |> go arg |> cons ")"
       acc
 
-  acc |> go term
+  acc |> go term |> cons " : " |> dumpTy ty
 
 let dumpTerms terms acc =
   let rec go terms acc =

@@ -73,6 +73,12 @@ type ContextLength = int
 
 type NameContext = string list
 
+type Ty =
+  | Any
+  | Nat
+  | Fun
+    of Ty * Ty
+
 type Term =
   | IntLit
     of TermId * value: string
