@@ -21,13 +21,28 @@ let locateTextRangeFromTop (text: string) (l: int) (r: int): TextRange * TextRan
   let ry, rx = locateTextPos (ly, lx) text l r
   (ly, lx), (ry, rx)
 
+let termIsAtom ast =
+  match ast with
+  | Term.IntLit _
+  | Term.Var _ ->
+    true
+  | _ ->
+    false
+
+let termIsApp ast =
+  match ast with
+  | Term.App _ ->
+    true
+  | _ ->
+    false
+
 let dumpErrors text errors acc =
   let rec go errors acc =
     match errors with
     | [] ->
       acc
 
-    | SynErr (msg, (l, r)) :: errors ->
+    | SynError (msg, (l, r)) :: errors ->
       let (ly, lx), (ry, rx) = locateTextRangeFromTop text l r
       acc
       |> cons (sprintf "(%d, %d)..(%d, %d) ERROR\n" (ly + 1) (lx + 1) (ry + 1) (rx + 1))
@@ -36,71 +51,51 @@ let dumpErrors text errors acc =
 
   acc |> go errors
 
-let dumpTerm nameCtx term acc =
-  let ast = term |> termToIndexAst |> indexToNamedAst nameCtx
+let dumpTerm term acc =
+  let rec go term acc =
+    match term with
+    | Term.IntLit (_, value) ->
+      acc |> cons value
 
-  let isAtom ast =
-    match ast with
-    | Ast.IntLit _
-    | Ast.Var _ ->
-      true
-    | _ ->
-      false
-
-  let isApp ast =
-    match ast with
-    | Ast.App _ ->
-      true
-    | _ ->
-      false
-
-  let rec go ast acc =
-    match ast with
-    | Ast.Var name ->
+    | Term.Var (_, name, _, _) ->
       acc |> cons name
 
-    | Ast.IntLit value ->
-      acc |> cons (string value)
-
-    | Ast.Abs (name, body) ->
+    | Term.Abs (_, name, body) ->
       acc |> cons "\\" |> cons name |> cons ". " |> go body
 
-    | Ast.App (cal, arg) ->
+    | Term.App (_, cal, arg) ->
       let acc =
-        if isAtom cal || isApp cal then
+        if termIsAtom cal || termIsApp cal then
           acc |> go cal
         else
           acc |> cons "(" |> go cal |> cons ")"
       let acc =
         acc |> cons " "
       let acc =
-        if isAtom arg then
+        if termIsAtom arg then
           acc |> go arg
         else
           acc |> cons "(" |> go arg |> cons ")"
       acc
 
-    | Ast.Semi (first, second) ->
-      acc |> go first |> cons ";\n" |> go second
+  acc |> go term
 
-  acc |> go ast
-
-let dumpTerms nameCtx terms acc =
+let dumpTerms terms acc =
   let rec go terms acc =
     match terms with
     | [] ->
       acc
 
     | term :: terms ->
-      acc |> dumpTerm nameCtx term |> cons "\n" |> go terms
+      acc |> dumpTerm term |> cons "\n" |> go terms
 
-  go terms acc
+  acc |> go terms
 
 let dumpEnd acc =
   acc |> List.rev |> String.concat ""
 
-let dump (text, terms, errors, nameCtx) =
+let dump (text, terms, errors) =
   []
   |> dumpErrors text errors
-  |> dumpTerms nameCtx terms
+  |> dumpTerms terms
   |> dumpEnd

@@ -3,15 +3,15 @@ module rec LetPoly.Eval
 
 type EvalContext = unit
 
-/// f: cut -> varTermId -> deBruijnIndex -> contextLength -> term
+/// f: cut -> varTermId -> name -> deBruijnIndex -> contextLength -> term
 let termMap f c term =
   let rec go c term =
     match term with
     | Term.IntLit _ ->
       term
 
-    | Term.Var (termId, dbi, ctxLen) ->
-      f c termId dbi ctxLen
+    | Term.Var (termId, name, dbi, ctxLen) ->
+      f c termId name dbi ctxLen
 
     | Term.Abs (termId, name, body) ->
       let body = go (c + 1) body
@@ -25,11 +25,11 @@ let termMap f c term =
   go c term
 
 let termShiftAbove (d: int) c term =
-  let f c termId dbi ctxLen =
+  let f c termId name dbi ctxLen =
     if dbi >= c then
-      Term.Var (termId, dbi + d, ctxLen + d)
+      Term.Var (termId, name, dbi + d, ctxLen + d)
     else
-      Term.Var (termId, dbi, ctxLen + d)
+      Term.Var (termId, name, dbi, ctxLen + d)
 
   termMap f c term
 
@@ -37,19 +37,19 @@ let termShift (d: int) (term: Term) =
   termShiftAbove d 0 term
 
 let termSubst j newTerm term =
-  let f c termId dbi ctxLen =
+  let f c termId name dbi ctxLen =
     if dbi = j + c then
       termShift c newTerm
     else
       // Unchanged.
-      Term.Var (termId, dbi, ctxLen)
+      Term.Var (termId, name, dbi, ctxLen)
 
   termMap f 0 term
 
 let termSubstTop newTerm term =
   termShift (-1) (termSubst 0 (termShift 1 newTerm) term)
 
-let isVal _ term =
+let termIsVal _ term =
   match term with
   | Term.Abs _ ->
     true
@@ -60,11 +60,11 @@ let evalTerm (term, ctx) =
   let reduce term =
     match term with
     | Term.App (_, Term.Abs (_, _, t12), v2)
-      when isVal ctx v2 ->
+      when termIsVal ctx v2 ->
       termSubstTop v2 t12
 
     | Term.App (id, v1, t2)
-      when isVal ctx v1 ->
+      when termIsVal ctx v1 ->
       let t2 = evalTerm (t2, ctx)
       Term.App (id, v1, t2)
 
@@ -96,12 +96,7 @@ let evalCommands (commands: Command list, ctx: EvalContext): Term list * EvalCon
 
   go [] ctx commands
 
-let eval (text: string, commands: Command list, errors: SynError list, nameCtx: NameContext, _serial: int) =
-  match errors with
-  | [] ->
-    let ctx = ()
-    let terms, _ = evalCommands (commands, ctx)
-    text, terms, [], nameCtx
-
-  | _ ->
-    text, [], errors, nameCtx
+let eval (commands: Command list) =
+  let ctx = ()
+  let terms, _ = evalCommands (commands, ctx)
+  terms

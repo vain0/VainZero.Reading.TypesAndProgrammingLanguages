@@ -26,68 +26,43 @@ type TokenKind =
 type Token = TokenKind * TextRange
 
 // -----------------------------------------------
-// Parse
+// Syntax trees
 // -----------------------------------------------
 
+type Serial = int
+
+type SynId = int
+
 type SynError =
-  | SynErr
+  | SynError
     of string * TextRange
 
-/// Node of concrete syntax tree.
-type Syn =
-  | Error
-    of string * TextRange * Syn list
-  | Token
-    of Token
-  /// 42
+/// Node kind of concrete syntax tree.
+type SynKind =
   | IntLit
-    of intLit:Syn
   /// x
   | Var
-    of ident:Syn
   /// (t)
   | Paren
-    of parenL:Syn * body:Syn * parenR:Syn
   /// \x. t
   | Abs
-    of lambda:Syn * ident:Syn * dot:Syn * body:Syn
   /// (callee, argument)
   /// f t
   | App
-    of cal:Syn * arg:Syn
   /// t; t
   | Semi
-    of first:Syn * semi:Syn * second:Syn
 
-/// Node of abstract syntax tree.
-type Ast =
-  | IntLit
-    of int
-  | Var
-    of string
-  | Abs
-    of string * Ast
-  | App
-    of Ast * Ast
-  | Semi
-    of Ast * Ast
-
-/// Node of abstract syntax tree.
-/// Variables are de Bruijn indices.
-type IndexAst =
-  | IntLit
-    of int
-  | Var
-    of DeBruijnIndex * ContextLength
-  | Abs
-    of Name * IndexAst
-  | App
-    of IndexAst * IndexAst
-  | Semi
-    of IndexAst * IndexAst
+type Syn =
+  | Error
+    of msg: string * range: TextRange * Syn option
+  | Missing
+  | Token
+    of Token
+  | Node
+    of SynId * SynKind * Syn list
 
 // -----------------------------------------------
-// Terms
+// HIR
 // -----------------------------------------------
 
 type TermId = int
@@ -96,24 +71,17 @@ type DeBruijnIndex = int
 
 type ContextLength = int
 
-type Name = string
-
 type NameContext = string list
-
-type TermData =
-  | Known
-    of pos:int
-  | Unknown
 
 type Term =
   | IntLit
-    of TermId * int
+    of TermId * value: string
   | Var
-    of TermId * DeBruijnIndex * ContextLength
+    of TermId * name: string * DeBruijnIndex * ContextLength
   | Abs
-    of TermId * Name * Term
+    of TermId * name: string * body: Term
   | App
-    of TermId * Term * Term
+    of TermId * cal: Term * arg: Term
 
 type Command =
   | Eval

@@ -1,14 +1,18 @@
 ﻿module rec LetPoly.Program
 
 open LetPoly.Types
-open LetPoly.Tokenize
-open LetPoly.Parse
-open LetPoly.Sema
+open LetPoly.Syntax
+open LetPoly.NameRes
 open LetPoly.Eval
 open LetPoly.Dump
 
 let run (text: string) =
-  text |> tokenize |> parse |> synToAst |> astToCommands |> eval |> dump
+  let serial = 0
+  let text, syn, errors, serial = (text, serial) |> synBuild
+  let commands = synToHir (text, syn)
+  let terms = eval commands
+  let output = dump (text, terms, errors)
+  output
 
 [<EntryPoint>]
 let main argv =

@@ -7,9 +7,11 @@
 
   <ItemGroup>
     <Compile Include="Types.fs" />
+    <Compile Include="Helpers.fs" />
     <Compile Include="Tokenize.fs" />
     <Compile Include="Parse.fs" />
-    <Compile Include="Sema.fs" />
+    <Compile Include="Syntax.fs" />
+    <Compile Include="NameRes.fs" />
     <Compile Include="Eval.fs" />
     <Compile Include="Dump.fs" />
     <Compile Include="Program.fs" />
