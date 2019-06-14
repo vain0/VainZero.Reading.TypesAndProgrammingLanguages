@@ -6,6 +6,9 @@ type EvalContext = unit
 let tyRecon term =
   let rec go term =
     match term with
+    | Term.BoolLit _ ->
+      Ty.Bool
+
     | Term.IntLit _ ->
       Ty.Nat
 
@@ -30,6 +33,7 @@ let tyRecon term =
 let termMap f c term =
   let rec go c term =
     match term with
+    | Term.BoolLit _
     | Term.IntLit _ ->
       term
 

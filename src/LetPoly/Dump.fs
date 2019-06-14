@@ -24,6 +24,7 @@ let locateTextRangeFromTop (text: string) (l: int) (r: int): TextRange * TextRan
 let tyIsAtom ty =
   match ty with
   | Ty.Any
+  | Ty.Bool
   | Ty.Nat _ ->
     true
   | _ ->
@@ -31,6 +32,7 @@ let tyIsAtom ty =
 
 let termIsAtom term =
   match term with
+  | Term.BoolLit _
   | Term.IntLit _
   | Term.Var _ ->
     true
@@ -65,6 +67,9 @@ let dumpTy ty acc =
     | Ty.Any ->
       acc |> cons "?"
 
+    | Ty.Bool ->
+      acc |> cons "Bool"
+
     | Ty.Nat ->
       acc |> cons "Nat"
 
@@ -88,6 +93,10 @@ let dumpTy ty acc =
 let dumpTerm (term, ty) acc =
   let rec go term acc =
     match term with
+    | Term.BoolLit (_, value) ->
+      let keyword = if value then "true" else "false"
+      acc |> cons keyword
+
     | Term.IntLit (_, value) ->
       acc |> cons value
 

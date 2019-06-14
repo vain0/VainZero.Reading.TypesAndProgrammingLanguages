@@ -46,6 +46,12 @@ let synToTerm (text: string, syn: Syn): Term option =
 
     | Syn.Node (synId, kind, children) ->
       match kind, children with
+      | SynKind.BoolLit, [Syn.Token (TokenKind.True, _)] ->
+        Term.BoolLit (synId, true) |> Some
+
+      | SynKind.BoolLit, [Syn.Token (TokenKind.False, _)] ->
+        Term.BoolLit (synId, false) |> Some
+
       | SynKind.IntLit, [Syn.Token (TokenKind.IntLit, range)] ->
         let value = slice range
         Term.IntLit (synId, value) |> Some
@@ -98,6 +104,7 @@ let synToCommands (text: string, syn: Syn): Command list =
 let nameResTerm term =
   let rec go nameCtx term =
     match term with
+    | Term.BoolLit _
     | Term.IntLit _ ->
       term
 

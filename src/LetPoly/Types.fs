@@ -13,6 +13,8 @@ type TokenKind =
   | Error
   | IntLit
   | Ident
+  | True
+  | False
   /// `(`
   | ParenL
   /// `)`
@@ -39,6 +41,7 @@ type SynError =
 
 /// Node kind of concrete syntax tree.
 type SynKind =
+  | BoolLit
   | IntLit
   /// x
   | Var
@@ -75,11 +78,14 @@ type NameContext = string list
 
 type Ty =
   | Any
+  | Bool
   | Nat
   | Fun
     of Ty * Ty
 
 type Term =
+  | BoolLit
+    of TermId * value: bool
   | IntLit
     of TermId * value: string
   | Var

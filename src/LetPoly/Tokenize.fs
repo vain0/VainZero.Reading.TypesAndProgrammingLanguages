@@ -3,6 +3,7 @@
 module rec LetPoly.Tokenize
 
 open LetPoly.Types
+open LetPoly.Helpers
 
 // -----------------------------------------------
 // Helpers
@@ -34,6 +35,15 @@ let strNthStartsWith (i: int) (prefix: string) (s: string): bool =
       && go (pi + 1) (si + 1)
     )
   i + prefix.Length <= s.Length && go 0 i
+
+let tokenKindFromIdent ident =
+  match ident with
+  | "true" ->
+    TokenKind.True
+  | "false" ->
+    TokenKind.False
+  | _ ->
+    TokenKind.Ident
 
 // -----------------------------------------------
 // Scanners
@@ -81,7 +91,8 @@ let scanIdent (acc: ScanAcc, text: string, i: int) =
     else
       i
   let endIndex = go i
-  (TokenKind.Ident, (i, endIndex)) :: acc, text, endIndex
+  let kind = tokenKindFromIdent (text |> strSlice i endIndex)
+  (kind, (i, endIndex)) :: acc, text, endIndex
 
 let scanAll (text: string) =
   let rec go (acc, text, i) =

@@ -63,6 +63,9 @@ let eatSemi tokens =
 
 let parseAtom tokens =
   match tokens with
+  | ((TokenKind.True | TokenKind.False), _) as token :: tokens ->
+    Syn.Node (noId, SynKind.BoolLit, [Syn.Token token]), tokens
+
   | (TokenKind.IntLit, _) as token :: tokens ->
     Syn.Node (noId, SynKind.IntLit, [Syn.Token  token]), tokens
 
@@ -88,6 +91,8 @@ let parseApp tokens =
   let rec go cal tokens =
     match tokens with
     // `first(term) \ first(abs)`
+    | (TokenKind.True, _) :: _
+    | (TokenKind.False, _) :: _
     | (TokenKind.IntLit, _) :: _
     | (TokenKind.Ident, _) :: _
     | (TokenKind.ParenL, _) :: _ ->
@@ -103,6 +108,8 @@ let parseApp tokens =
 
 let rec parseTerm tokens =
   match tokens with
+  | (TokenKind.True, _) :: _
+  | (TokenKind.False, _) :: _
   | (TokenKind.IntLit, _) :: _
   | (TokenKind.Ident, _) :: _
   | (TokenKind.ParenL, _) :: _
