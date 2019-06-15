@@ -67,7 +67,7 @@ let synToTerm (text: string, syn: Syn): Term option =
         let name = slice range
         match go body with
         | Some body ->
-          Term.Abs (synId, name, body) |> Some
+          Term.Abs (synId, name, Ty.Any, body) |> Some
         | None ->
           None
 
@@ -113,10 +113,10 @@ let nameResTerm term =
       let ctxLen = nameCtx |> nameCtxLen
       Term.Var (id, name, dbi, ctxLen)
 
-    | Term.Abs (id, name, body) ->
+    | Term.Abs (id, name, ty, body) ->
       let nameCtx = name :: nameCtx
       let body = go nameCtx body
-      Term.Abs (id, name, body)
+      Term.Abs (id, name, ty, body)
 
     | Term.App (id, cal, arg) ->
       let cal = go nameCtx cal

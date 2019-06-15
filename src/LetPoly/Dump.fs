@@ -23,9 +23,17 @@ let locateTextRangeFromTop (text: string) (l: int) (r: int): TextRange * TextRan
 
 let tyIsAtom ty =
   match ty with
+  | Ty.Meta _
   | Ty.Any
   | Ty.Bool
   | Ty.Nat _ ->
+    true
+  | _ ->
+    false
+
+let tyIsFun ty =
+  match ty with
+  | Ty.Fun _ ->
     true
   | _ ->
     false
@@ -64,6 +72,7 @@ let dumpErrors text errors acc =
 let dumpTy ty acc =
   let rec go ty acc =
     match ty with
+    | Ty.Meta _
     | Ty.Any ->
       acc |> cons "?"
 
@@ -82,7 +91,7 @@ let dumpTy ty acc =
       let acc =
         acc |> cons " -> "
       let acc =
-        if tyIsAtom tTy then
+        if tyIsAtom tTy || tyIsFun tTy then
           acc |> go tTy
         else
           acc |> cons "(" |> go tTy |> cons ")"
@@ -103,7 +112,7 @@ let dumpTerm (term, ty) acc =
     | Term.Var (_, name, _, _) ->
       acc |> cons name
 
-    | Term.Abs (_, name, body) ->
+    | Term.Abs (_, name, _, body) ->
       acc |> cons "\\" |> cons name |> cons ". " |> go body
 
     | Term.App (_, cal, arg) ->

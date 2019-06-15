@@ -12,6 +12,7 @@
     <Compile Include="Parse.fs" />
     <Compile Include="Syntax.fs" />
     <Compile Include="NameRes.fs" />
+    <Compile Include="Infer.fs" />
     <Compile Include="Eval.fs" />
     <Compile Include="Dump.fs" />
     <Compile Include="Program.fs" />

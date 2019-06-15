@@ -77,6 +77,8 @@ type ContextLength = int
 type NameContext = string list
 
 type Ty =
+  | Meta
+    of Serial
   | Any
   | Bool
   | Nat
@@ -91,7 +93,7 @@ type Term =
   | Var
     of TermId * name: string * DeBruijnIndex * ContextLength
   | Abs
-    of TermId * name: string * body: Term
+    of TermId * name: string * ty: Ty * body: Term
   | App
     of TermId * cal: Term * arg: Term
 

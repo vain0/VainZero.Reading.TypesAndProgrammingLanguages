@@ -20,3 +20,9 @@ let testParseBoolLit () =
   run """\_. false""" |> trim |> is """\_. false : ? -> Bool"""
 
   run """\_. falseTrue""" |> trim |> is """\_. falseTrue : ? -> ?"""
+
+[<Fact>]
+let testInference () =
+  let src = """\f. \g. f (g (g true (f true)) 1)"""
+  let expected = """\f. \g. f (g (g true (f true)) 1) : (Bool -> Nat) -> (Bool -> Nat -> Bool) -> Nat"""
+  src |> run |> trim |> is expected

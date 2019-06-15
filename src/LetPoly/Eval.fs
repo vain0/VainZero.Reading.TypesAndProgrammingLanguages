@@ -1,6 +1,8 @@
 /// Evaluate terms.
 module rec LetPoly.Eval
 
+open LetPoly.Infer
+
 type EvalContext = unit
 
 let tyRecon term =
@@ -15,9 +17,9 @@ let tyRecon term =
     | Term.Var _ ->
       Ty.Any
 
-    | Term.Abs (_, _, body) ->
+    | Term.Abs (_, _, sTy, body) ->
       let tTy = go body
-      Ty.Fun (Ty.Any, tTy)
+      Ty.Fun (sTy, tTy)
 
     | Term.App (_, cal, arg) ->
       let calTy = go cal
@@ -40,9 +42,9 @@ let termMap f c term =
     | Term.Var (termId, name, dbi, ctxLen) ->
       f c termId name dbi ctxLen
 
-    | Term.Abs (termId, name, body) ->
+    | Term.Abs (termId, name, sTy, body) ->
       let body = go (c + 1) body
-      Term.Abs (termId, name, body)
+      Term.Abs (termId, name, sTy, body)
 
     | Term.App (termId, cal, arg) ->
       let cal = go c cal
@@ -86,7 +88,7 @@ let termIsVal _ term =
 let evalTerm (term, ctx) =
   let reduce term =
     match term with
-    | Term.App (_, Term.Abs (_, _, t12), v2)
+    | Term.App (_, Term.Abs (_, _, _, t12), v2)
       when termIsVal ctx v2 ->
       termSubstTop v2 t12
 
@@ -112,17 +114,21 @@ let evalTerm (term, ctx) =
   go term
 
 let evalCommands (commands: Command list, ctx: EvalContext) =
-  let rec go acc ctx commands =
+  let rec go acc serial ctx commands =
     match commands with
     | [] ->
       List.rev acc, ctx
 
     | Command.Eval term :: commands ->
-      let term = evalTerm (term, ctx)
-      let ty = tyRecon term
-      go ((term, ty) :: acc) ctx commands
+      let ty, (serial, constraints) = inferTerm (term, (serial, []))
+      let substs = unify () constraints
+      let ty = ty |> tyApplySubst substs
 
-  go [] ctx commands
+      let term = evalTerm (term, ctx)
+
+      go ((term, ty) :: acc) serial ctx commands
+
+  go [] 0 ctx commands
 
 let eval (commands: Command list) =
   let ctx = ()
