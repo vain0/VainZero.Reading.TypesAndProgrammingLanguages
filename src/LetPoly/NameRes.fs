@@ -123,7 +123,10 @@ let nameResTerm term =
       let arg = go nameCtx arg
       Term.App (id, cal, arg)
 
-  go [] term
+  let globalNameCtx =
+    ["is_zero"]
+
+  go globalNameCtx term
 
 let nameRes commands =
   commands |> List.map (fun command ->

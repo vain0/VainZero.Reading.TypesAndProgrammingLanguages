@@ -28,6 +28,10 @@ let testInference () =
   src |> run |> trim |> is expected
 
 [<Fact>]
+let testIsZero () =
+  "is_zero 0" |> run |> trim |> is "true : Bool"
+
+[<Fact>]
 let testGoal () =
   let src = """
     let headOr x xs =

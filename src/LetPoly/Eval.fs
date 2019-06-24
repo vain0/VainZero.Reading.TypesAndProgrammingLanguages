@@ -88,6 +88,10 @@ let termIsVal _ term =
 let evalTerm (term, ctx) =
   let reduce term =
     match term with
+    | Term.App (_, Term.Var (_, "is_zero", _, _), Term.IntLit (termId, value)) ->
+      // FIXME: handle conversion error
+      Term.BoolLit (termId, int value = 0)
+
     | Term.App (_, Term.Abs (_, _, _, t12), v2)
       when termIsVal ctx v2 ->
       termSubstTop v2 t12

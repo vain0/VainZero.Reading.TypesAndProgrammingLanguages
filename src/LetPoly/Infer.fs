@@ -57,7 +57,13 @@ let inferTerm term =
       eprintfn "%A : %A ~ %A" term appTy (Ty.Fun (argTy, appTy))
       appTy, (serial, acc)
 
-  go [] term
+  let globalTypeCtx =
+    [
+      // is_zero
+      Ty.Fun (Ty.Nat, Ty.Bool)
+    ]
+
+  go globalTypeCtx term
 
 let tySubst meta newTy ty =
   let rec go ty =
